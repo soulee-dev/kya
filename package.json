@@ -1,0 +1,18 @@
+{
+  "name": "kya",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "verifier": "pnpm --filter @kya/verifier dev",
+    "platform": "pnpm --filter @kya/platform dev",
+    "test": "pnpm --filter @kya/core test",
+    "typecheck": "pnpm -r typecheck",
+    "e2e": "bash scripts/e2e.sh",
+    "scenario": "pnpm --filter @kya/verifier scenario",
+    "fake-agent": "pnpm --filter @kya/platform fake-agent"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2",
+    "typescript": "^5.9.3"
+  }
+}
