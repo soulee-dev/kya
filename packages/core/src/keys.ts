@@ -1,5 +1,5 @@
 import { exportJWK, generateKeyPair, importJWK, type JWK, type CryptoKey } from "jose";
-import { readJsonFile, writeJsonFile } from "./store.js";
+import { readJsonFile, writeJsonFile } from "./store";
 
 export interface PrincipalKeyFile {
   kid: string;

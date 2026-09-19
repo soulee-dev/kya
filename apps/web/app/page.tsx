@@ -859,7 +859,7 @@ export default function Home() {
                                 <AlertTitle className="flex flex-wrap items-center justify-between gap-2">
                                   <span>
                                     {principal?.name || "Principal"} →{" "}
-                                    {short(d.payer)}
+                                    {short(d.payer ?? "")}
                                   </span>
                                   <Badge
                                     variant={

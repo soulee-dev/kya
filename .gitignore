@@ -9,3 +9,7 @@ data/
 docs/slides/dist/
 .logs/
 .tools/
+
+# transient tooling
+.playwright-mcp/
+**/__pycache__/

@@ -1,7 +1,7 @@
 import { createPublicClient, createWalletClient, erc20Abi, http, type Hex } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { baseSepolia } from "viem/chains";
-import { USDC_ASSET } from "./types.js";
+import { USDC_ASSET } from "./types";
 
 export interface TreasuryOptions {
   privateKey: Hex;
@@ -11,7 +11,11 @@ export interface TreasuryOptions {
 
 export interface Treasury {
   address: Hex;
-  /** Agent 지갑에 USDC(atomic units)를 보내고 tx hash를 돌려준다. */
+  /** USDC(atomic units) 전송 트랜잭션을 보내고 tx hash만 돌려준다. 영수증은 `confirm`으로 확인한다. */
+  send(to: Hex, amount: string): Promise<Hex>;
+  /** 전송 영수증을 기다린다. 되돌려졌으면 throw. */
+  confirm(hash: Hex, timeoutMs?: number): Promise<void>;
+  /** `send` + `confirm`. */
   fund(to: Hex, amount: string): Promise<Hex>;
   balanceOf(address: Hex): Promise<bigint>;
 }
@@ -23,20 +27,28 @@ export function createTreasury(opts: TreasuryOptions): Treasury {
   const asset = (opts.asset ?? USDC_ASSET) as Hex;
   const wallet = createWalletClient({ account, chain: baseSepolia, transport });
   const pub = createPublicClient({ chain: baseSepolia, transport });
-  return {
+  const treasury: Treasury = {
     address: account.address,
-    async fund(to, amount) {
-      const hash = await wallet.writeContract({
+    send(to, amount) {
+      return wallet.writeContract({
         address: asset,
         abi: erc20Abi,
         functionName: "transfer",
         args: [to, BigInt(amount)],
       });
-      await pub.waitForTransactionReceipt({ hash, confirmations: 1 });
+    },
+    async confirm(hash, timeoutMs = 60_000) {
+      const receipt = await pub.waitForTransactionReceipt({ hash, confirmations: 1, timeout: timeoutMs });
+      if (receipt.status !== "success") throw new Error(`USDC transfer ${hash} reverted`);
+    },
+    async fund(to, amount) {
+      const hash = await treasury.send(to, amount);
+      await treasury.confirm(hash);
       return hash;
     },
     async balanceOf(address) {
       return pub.readContract({ address: asset, abi: erc20Abi, functionName: "balanceOf", args: [address] });
     },
   };
+  return treasury;
 }

@@ -3,17 +3,11 @@ import { spawn, type ChildProcess } from "node:child_process";
 import { mkdirSync, openSync } from "node:fs";
 import path from "node:path";
 import {
-  createPublicClient,
-  createWalletClient,
-  http,
-  erc20Abi,
-  type Address,
-  type Hex,
-} from "viem";
-import { privateKeyToAccount } from "viem/accounts";
-import { baseSepolia } from "viem/chains";
+  createTreasury,
+  DEFAULT_FUNDING_AMOUNT,
+} from "@kya/core";
+import type { Hex } from "viem";
 import { publicOrigin } from "./identity";
-import { USDC } from "./types";
 export const demoMode = () => process.env.WEB_DEMO_MODE === "true";
 export async function createSandbox() {
   if (demoMode())
@@ -148,31 +142,21 @@ function startTunnelClient(url: string, token?: string) {
   child.on("exit", (code) => console.log(`[kya] tunnel client exited (${code})`));
   globals.kyaTunnel = child;
 }
-export async function sendFunding(address: string): Promise<Hex> {
+function treasury() {
   if (!process.env.TREASURY_PRIVATE_KEY)
     throw new Error("TREASURY_PRIVATE_KEY 환경 변수가 필요합니다.");
-  const account = privateKeyToAccount(process.env.TREASURY_PRIVATE_KEY as Hex);
-  const wallet = createWalletClient({
-    account,
-    chain: baseSepolia,
-    transport: http(process.env.BASE_SEPOLIA_RPC || "https://sepolia.base.org"),
-  });
-  return wallet.writeContract({
-    address: USDC,
-    abi: erc20Abi,
-    functionName: "transfer",
-    args: [address as Address, 20000000n],
+  return createTreasury({
+    privateKey: process.env.TREASURY_PRIVATE_KEY as Hex,
+    rpcUrl: process.env.BASE_SEPOLIA_RPC,
   });
 }
-export async function confirmFunding(hash: string) {
-  const client = createPublicClient({
-    chain: baseSepolia,
-    transport: http(process.env.BASE_SEPOLIA_RPC || "https://sepolia.base.org"),
-  });
-  const receipt = await client.waitForTransactionReceipt({
-    hash: hash as Hex,
-    timeout: 60_000,
-  });
-  if (receipt.status !== "success")
-    throw new Error("USDC 충전 트랜잭션이 되돌려졌습니다.");
+/** Agent 지갑에 USDC를 보내고 tx hash를 돌려준다. 영수증은 `confirmFunding`으로 확인한다. */
+export function sendFunding(address: string) {
+  return treasury().send(
+    address as Hex,
+    process.env.FUNDING_AMOUNT || DEFAULT_FUNDING_AMOUNT,
+  );
+}
+export function confirmFunding(hash: string) {
+  return treasury().confirm(hash as Hex);
 }
