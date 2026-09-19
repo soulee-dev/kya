@@ -112,7 +112,7 @@ A의 `POST /sandboxes` 가 Daytona 샌드박스를 만들고 B의 러너 파일�
 1. `viem`으로 키 쌍 생성. 개인키는 메모리에만 둔다.
 2. `POST {KYA_URL}/agents/register` 본문 `{ "sandboxId", "address" }`.
 3. `GET {KYA_URL}/agents/{address}/delegation` 을 2초마다 폴링. Principal이 발급하면 `{ "delegation": "<JWT>" }`, 아직이면 404.
-4. A는 발급과 동시에 treasury 지갑에서 agent 주소로 테스트넷 USDC `20000000`을 송금한다(**자금 충전**). 러너는 USDC 잔액이 0보다 커질 때까지 기다린다.
+4. **자금 충전은 사람이 한다.** A의 화면은 register된 agent 주소를 복사 버튼과 함께 크게 보여 주고, 발표자가 그 주소를 `https://faucet.circle.com`(Base Sepolia)에 넣어 USDC 10을 받는다. 러너는 USDC 잔액이 0보다 커질 때까지 기다린다. 시나리오 지출은 7 USDC라 10이면 충분하다. (treasury 온체인 송금은 가스비 ETH를 못 받아 제외. 주소마다 한 번만 받을 수 있으므로 리허설과 본 데모는 새 샌드박스로 한다.)
 5. Claude Tool Runner 시작. 도구 세 개: `list_products`, `create_checkout(productId)`, `complete_checkout(sessionId)`. `complete_checkout`이 402를 만나면 `@x402/evm` 서명 + `extensions.kya` 회신.
 6. 각 시도 결과를 `POST {KYA_URL}/agents/{address}/events` 로 보고(UI 로그용). 본문 `{ "step", "message" }`.
 
@@ -125,5 +125,5 @@ A의 `POST /sandboxes` 가 Daytona 샌드박스를 만들고 B의 러너 파일�
 
 ## 사전 확보 (14:35까지)
 
-- A: Daytona API 키, Anthropic API 키, `cloudflared` 터널, treasury 지갑(Base Sepolia ETH 소량 + Circle faucet USDC)
+- A: Daytona API 키, Anthropic API 키, `cloudflared` 터널. Circle faucet 로그인 상태 유지(무대에서 바로 쓰기 위해)
 - B: Merchant payTo 주소(아무 EOA), Hono 골격
