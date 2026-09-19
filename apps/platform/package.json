@@ -1,0 +1,23 @@
+{
+  "name": "@kya/platform",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/app.ts"
+  },
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "fake-agent": "bash scripts/fake-agent.sh",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.1.1",
+    "@kya/core": "workspace:*",
+    "hono": "^4.13.8"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.13"
+  }
+}

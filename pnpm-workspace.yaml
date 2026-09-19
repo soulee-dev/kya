@@ -1,0 +1,6 @@
+packages:
+  - packages/*
+  - apps/*
+  - docs/slides
+onlyBuiltDependencies:
+  - esbuild
