@@ -1,5 +1,5 @@
 import type { JWK } from "jose";
-import { NETWORK } from "./types.js";
+import { NETWORK } from "./types";
 
 /** `did:web:<host>[:path...]` → 공개키 문서 URL. 이 플랫폼은 host 단위로 키 하나를 `/.well-known/did.json`에 둔다. */
 export function didWebToDocumentUrl(did: string): string {

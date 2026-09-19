@@ -1,4 +1,4 @@
-import { JsonState } from "./store.js";
+import { JsonState } from "./store";
 
 export interface LedgerEntry {
   spent: string;

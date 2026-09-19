@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { getAddress, isAddress } from "viem";
-import { didHost, issue } from "./identity";
+import { issue, principalDidFor } from "./identity";
 import { exclusive, readState, writeState, event } from "./store";
 import {
   confirmFunding,
@@ -116,7 +116,7 @@ export async function handle(request: Request, segments: string[]) {
         const principalId = crypto.randomUUID();
         state.principal = {
           principalId,
-          did: `did:web:${didHost()}:principals:${principalId}`,
+          did: principalDidFor(principalId),
           entityType: input.entityType,
           name: input.name,
           verifiedAt: new Date().toISOString(),
@@ -211,7 +211,7 @@ export async function handle(request: Request, segments: string[]) {
             "treasury",
             demoMode()
               ? "데모 모드 · 실제 USDC 충전 없음"
-              : "Agent 지갑에 20 USDC 충전 완료",
+              : "Agent 지갑에 USDC 충전 완료",
           );
           await writeState(state);
         }

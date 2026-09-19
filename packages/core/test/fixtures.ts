@@ -1,4 +1,4 @@
-import { buildDidDocument, generatePrincipalKey, issueDelegation, toSigner, type FacilitatorRequest, type Principal, type Scope } from "../src/index.js";
+import { buildDidDocument, generatePrincipalKey, issueDelegation, toSigner, type FacilitatorRequest, type Principal, type Scope } from "../src/index";
 
 export const AGENT = "0x1111111111111111111111111111111111111111";
 export const MERCHANT = "0x2222222222222222222222222222222222222222";
