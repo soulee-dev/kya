@@ -1,7 +1,7 @@
-import { addressFromPkh } from "./did.js";
-import { DelegationError, verifyDelegation, type DidResolver } from "./delegation.js";
-import type { SpendLedger } from "./ledger.js";
-import type { DelegationClaims, DenyCode, FacilitatorRequest } from "./types.js";
+import { addressFromPkh } from "./did";
+import { DelegationError, verifyDelegation, type DidResolver } from "./delegation";
+import type { SpendLedger } from "./ledger";
+import type { DelegationClaims, DenyCode, FacilitatorRequest } from "./types";
 
 export type KyaCheckResult =
   | { ok: true; claims: DelegationClaims; payer: string; amount: string; payTo: string }

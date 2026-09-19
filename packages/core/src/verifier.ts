@@ -1,8 +1,8 @@
 import { randomBytes } from "node:crypto";
-import { checkPayment, type KyaCheckResult } from "./check.js";
-import type { DidResolver } from "./delegation.js";
-import { SpendLedger } from "./ledger.js";
-import { JsonState } from "./store.js";
+import { checkPayment, type KyaCheckResult } from "./check";
+import type { DidResolver } from "./delegation";
+import { SpendLedger } from "./ledger";
+import { JsonState } from "./store";
 import type {
   Decision,
   DecisionPhase,
@@ -10,7 +10,7 @@ import type {
   SettleResponse,
   SupportedResponse,
   VerifyResponse,
-} from "./types.js";
+} from "./types";
 
 export type SettleMode = "live" | "mock";
 

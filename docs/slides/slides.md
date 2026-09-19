@@ -364,17 +364,16 @@ packages/core        도메인 라이브러리 (@kya/core)
   check.ts           6단계 검사 → ok | { code, detail }
   ledger.ts          Spend Ledger (jti별 누적, JSON 파일)
   verifier.ts        facilitator 프록시 + Decision 기록 + mock 모드
-  platform.ts        신원 확인(스텁), 샌드박스, 등록, 발급, 충전
   funding.ts         treasury 지갑에서 USDC 송금 (viem)
   sandbox.ts         Daytona SDK 래퍼
 
 apps/verifier        Hono. /supported /verify /settle /decisions /ledger
-apps/platform        Hono. /.well-known/did.json /principals /sandboxes
+apps/web             Next.js. 발급 콘솔 + /.well-known/did.json /principals /sandboxes
                      /agents/register /agents/:addr/delegation /delegations /state
 ```
 
 <div class="text-sm opacity-70 mt-2">
-단위 테스트 14개 · scenario / fake-agent / e2e 스크립트로 발급 → did.json 조회 → 검증까지 확인
+단위 테스트 12개 · scenario / fake-agent / e2e 스크립트로 발급 → did.json 조회 → 검증까지 확인
 </div>
 
 ---

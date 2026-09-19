@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { addressFromPkh, didWebToDocumentUrl, generatePrincipalKey, buildDidDocument, staticDidResolver, verifyDelegation, DelegationError } from "../src/index.js";
-import { AGENT, fixture } from "./fixtures.js";
+import { addressFromPkh, didWebToDocumentUrl, generatePrincipalKey, buildDidDocument, staticDidResolver, verifyDelegation, DelegationError } from "../src/index";
+import { AGENT, fixture } from "./fixtures";
 
 describe("did helpers", () => {
   it("did:web → /.well-known/did.json on the host", () => {

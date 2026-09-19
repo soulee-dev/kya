@@ -38,6 +38,9 @@ importers:
       hono:
         specifier: ^4.13.8
         version: 4.13.8
+      openai:
+        specifier: ^7.19.0
+        version: 7.19.0(@aws-sdk/credential-provider-node@3.972.83)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.6.5)
       viem:
         specifier: ^2.56.8
         version: 2.56.8(typescript@7.0.2)(zod@4.6.5)
@@ -89,22 +92,6 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
 
-  apps/platform:
-    dependencies:
-      '@hono/node-server':
-        specifier: ^2.1.1
-        version: 2.1.1(hono@4.13.8)
-      '@kya/core':
-        specifier: workspace:*
-        version: link:../../packages/core
-      hono:
-        specifier: ^4.13.8
-        version: 4.13.8
-    devDependencies:
-      tsx:
-        specifier: ^4.23.13
-        version: 4.23.13
-
   apps/verifier:
     dependencies:
       '@hono/node-server':
@@ -126,6 +113,9 @@ importers:
       '@daytona/sdk':
         specifier: 0.214.0
         version: 0.214.0
+      '@kya/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@tailwindcss/postcss':
         specifier: ^4.3.3
         version: 4.3.3
@@ -135,9 +125,6 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
-      jose:
-        specifier: ^6.1.0
-        version: 6.2.12
       lucide-react:
         specifier: ^0.468.0
         version: 0.468.0(react@19.3.0)
@@ -181,6 +168,9 @@ importers:
       '@types/react-dom':
         specifier: ^19.0.0
         version: 19.3.0(@types/react@19.3.0)
+      jose:
+        specifier: ^6.2.12
+        version: 6.2.12
       tsx:
         specifier: ^4.20.0
         version: 4.23.13
@@ -4801,6 +4791,30 @@ packages:
   open@11.0.4:
     resolution: {integrity: sha512-++Zlftm0kVLPmzC06t6epuWmcRMDbI4z5P3NNX979WA/k23+NtSOynEGzsVfZwguKw2mi5umVgnBlJQMwRz4Pg==}
     engines: {node: '>=20'}
+
+  openai@7.19.0:
+    resolution: {integrity: sha512-MX2s3u2L5racTO0CC/SWpCOasJQBCJrqLKXK+l82cAhdeF8mPMBEe/gxMm0ZFa2xpKpOFLRjxv5afYEZbBXmbQ==}
+    engines: {node: '>=22.0.0'}
+    peerDependencies:
+      '@aws-sdk/credential-provider-node': '>=3.972.0 <4'
+      '@smithy/hash-node': '>=4.3.0 <5'
+      '@smithy/signature-v4': '>=5.4.0 <6'
+      undici: '>=5 <9'
+      ws: ^8.21.0
+      zod: ^3.25 || ^4.0
+    peerDependenciesMeta:
+      '@aws-sdk/credential-provider-node':
+        optional: true
+      '@smithy/hash-node':
+        optional: true
+      '@smithy/signature-v4':
+        optional: true
+      undici:
+        optional: true
+      ws:
+        optional: true
+      zod:
+        optional: true
 
   ox@0.14.45:
     resolution: {integrity: sha512-jpsQ+p0JZh9mKCxxzxz0d5qFHZZg2/O9xW18IpEC/dNXXPVqmDJ0c//9RMz0CILkbSGPA42+cbU0fC/ghwJ03w==}
@@ -10979,6 +10993,13 @@ snapshots:
       is-inside-container: 1.0.0
       powershell-utils: 0.2.1
       wsl-utils: 1.0.0
+
+  openai@7.19.0(@aws-sdk/credential-provider-node@3.972.83)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.6.5):
+    optionalDependencies:
+      '@aws-sdk/credential-provider-node': 3.972.83
+      '@smithy/signature-v4': 5.7.3
+      ws: 8.21.0
+      zod: 4.6.5
 
   ox@0.14.45(typescript@5.9.3)(zod@4.6.5):
     dependencies:

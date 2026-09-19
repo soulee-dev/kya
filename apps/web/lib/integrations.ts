@@ -1,17 +1,12 @@
-import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
+import { readFile } from "node:fs/promises";
 import {
-  createPublicClient,
-  createWalletClient,
-  http,
-  erc20Abi,
-  type Address,
-  type Hex,
-} from "viem";
-import { privateKeyToAccount } from "viem/accounts";
-import { baseSepolia } from "viem/chains";
+  createSandboxLauncher,
+  createTreasury,
+  DEFAULT_FUNDING_AMOUNT,
+} from "@kya/core";
+import type { Hex } from "viem";
 import { publicOrigin } from "./identity";
-import { USDC } from "./types";
 export const demoMode = () => process.env.WEB_DEMO_MODE === "true";
 export async function createSandbox() {
   if (demoMode())
@@ -28,95 +23,39 @@ export async function createSandbox() {
   ]) {
     if (!process.env[key]) throw new Error(`${key} 환경 변수가 필요합니다.`);
   }
-  const root = path.resolve(process.env.RUNNER_DIR!);
-  await readFile(path.join(root, "package.json"), "utf8");
-  const { Daytona } = await import("@daytona/sdk");
-  const sandbox = await new Daytona().create({
-    language: "typescript",
-    envVars: {
-      KYA_URL: publicOrigin(),
-      MERCHANT_URL: process.env.MERCHANT_URL!,
-      ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY!,
-      SHOPPING_LIST: "A,B,C,C",
-    },
-    labels: { app: "kya" },
-    autoStopInterval: 60,
-    public: false,
+  const runnerDir = path.resolve(process.env.RUNNER_DIR!);
+  await readFile(path.join(runnerDir, "package.json"), "utf8");
+  const launcher = createSandboxLauncher({
+    apiKey: process.env.DAYTONA_API_KEY,
+    apiUrl: process.env.DAYTONA_API_URL,
+    target: process.env.DAYTONA_TARGET,
+    runnerDir,
+    runCommand: process.env.RUNNER_COMMAND,
   });
-  try {
-    const destination = "/home/daytona/kya-runner";
-    const upload = async (local: string, remote: string) => {
-      await sandbox.fs.createFolder(remote, "755");
-      for (const entry of await readdir(local, { withFileTypes: true })) {
-        if (
-          ["node_modules", ".git", ".next"].includes(entry.name) ||
-          entry.name.startsWith(".env")
-        )
-          continue;
-        if (entry.isDirectory())
-          await upload(path.join(local, entry.name), `${remote}/${entry.name}`);
-        else if (entry.isFile())
-          await sandbox.fs.uploadFile(
-            await readFile(path.join(local, entry.name)),
-            `${remote}/${entry.name}`,
-          );
-      }
-    };
-    await upload(root, destination);
-    const install = await sandbox.process.executeCommand(
-      "corepack enable && pnpm install --no-frozen-lockfile",
-      destination,
-      undefined,
-      120,
-    );
-    if (install.exitCode !== 0)
-      throw new Error("Agent 러너 의존성 설치에 실패했습니다.");
-    // Bootstrap carries SANDBOX_ID, which is only known after creation, without shell interpolation.
-    await sandbox.fs.uploadFile(
-      Buffer.from(
-        `const {spawn}=require('node:child_process');\nconst child=spawn(${JSON.stringify(process.env.RUNNER_COMMAND || "pnpm start")},{shell:true,stdio:'inherit',env:{...process.env,SANDBOX_ID:${JSON.stringify(sandbox.id)}}});\nchild.on('exit',code=>process.exit(code??1));`,
-      ),
-      `${destination}/kya-bootstrap.cjs`,
-    );
-    const start = await sandbox.process.executeCommand(
-      "nohup node kya-bootstrap.cjs > /tmp/kya-runner.log 2>&1 < /dev/null &",
-      destination,
-      undefined,
-      10,
-    );
-    if (start.exitCode !== 0)
-      throw new Error("Agent 러너 실행에 실패했습니다.");
-    return { sandboxId: sandbox.id, simulated: false };
-  } catch (error) {
-    await sandbox.delete().catch(() => undefined);
-    throw error;
-  }
+  // 계약 접점 4의 환경 변수. SANDBOX_ID는 생성 뒤 core가 주입한다.
+  const { sandboxId } = await launcher.launch({
+    KYA_URL: publicOrigin(),
+    MERCHANT_URL: process.env.MERCHANT_URL!,
+    ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY!,
+    SHOPPING_LIST: process.env.SHOPPING_LIST || "A,B,C,C",
+  });
+  return { sandboxId, simulated: false };
 }
-export async function sendFunding(address: string): Promise<Hex> {
+function treasury() {
   if (!process.env.TREASURY_PRIVATE_KEY)
     throw new Error("TREASURY_PRIVATE_KEY 환경 변수가 필요합니다.");
-  const account = privateKeyToAccount(process.env.TREASURY_PRIVATE_KEY as Hex);
-  const wallet = createWalletClient({
-    account,
-    chain: baseSepolia,
-    transport: http(process.env.BASE_SEPOLIA_RPC || "https://sepolia.base.org"),
-  });
-  return wallet.writeContract({
-    address: USDC,
-    abi: erc20Abi,
-    functionName: "transfer",
-    args: [address as Address, 20000000n],
+  return createTreasury({
+    privateKey: process.env.TREASURY_PRIVATE_KEY as Hex,
+    rpcUrl: process.env.BASE_SEPOLIA_RPC,
   });
 }
-export async function confirmFunding(hash: string) {
-  const client = createPublicClient({
-    chain: baseSepolia,
-    transport: http(process.env.BASE_SEPOLIA_RPC || "https://sepolia.base.org"),
-  });
-  const receipt = await client.waitForTransactionReceipt({
-    hash: hash as Hex,
-    timeout: 60_000,
-  });
-  if (receipt.status !== "success")
-    throw new Error("USDC 충전 트랜잭션이 되돌려졌습니다.");
+/** Agent 지갑에 USDC를 보내고 tx hash를 돌려준다. 영수증은 `confirmFunding`으로 확인한다. */
+export function sendFunding(address: string) {
+  return treasury().send(
+    address as Hex,
+    process.env.FUNDING_AMOUNT || DEFAULT_FUNDING_AMOUNT,
+  );
+}
+export function confirmFunding(hash: string) {
+  return treasury().confirm(hash as Hex);
 }

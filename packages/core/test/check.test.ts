@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { checkPayment, SpendLedger, staticDidResolver } from "../src/index.js";
-import { fixture, OTHER_MERCHANT, paymentRequest } from "./fixtures.js";
+import { checkPayment, SpendLedger, staticDidResolver } from "../src/index";
+import { fixture, OTHER_MERCHANT, paymentRequest } from "./fixtures";
 
 describe("KYA 6단계 검사", () => {
   it("1 missing_delegation", async () => {

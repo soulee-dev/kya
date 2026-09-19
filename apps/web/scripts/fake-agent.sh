@@ -31,7 +31,7 @@ const result = request('/api/delegations', { principalId: state.principal.princi
 } });
 const document = request('/.well-known/did.json');
 const key = await importJWK(document.verificationMethod[0].publicKeyJwk, 'EdDSA');
-const { payload } = await jwtVerify(result.delegation, key, { algorithms: ['EdDSA'], issuer: state.principal.did, subject: `did:pkh:eip155:84532:${address}` });
+const { payload } = await jwtVerify(result.delegation, key, { algorithms: ['EdDSA'], issuer: state.principal.did, subject: `did:pkh:eip155:84532:${address.toLowerCase()}` });
 const polled = request(`/agents/${address}/delegation`);
 if (polled.delegation !== result.delegation) throw new Error('Agent 폴링 JWT가 발급 JWT와 다릅니다.');
 console.log(`JWT 서명·issuer·subject·만료 검증 통과\njti: ${payload.jti}\n실제 충전 없음 (로컬 데모)`);
