@@ -51,6 +51,8 @@ ISSUE_DELEGATION=1 bash scripts/fake-agent.sh
 
 ## UI 컴포넌트
 
-`components/ui/`는 shadcn/ui CLI로 추가한 Button, Input, Card, Badge, Tabs, Progress, Alert 컴포넌트입니다. `components.json`에 별칭과 스타일을 설정했습니다. `app/globals.css`의 CSS 변수로 색상과 모서리를 조정하고, 화면 배치용 스타일은 같은 파일에 유지합니다. 사업자/자연인 선택은 키보드 방향키를 지원하는 Radix Tabs, 지출 게이지는 Radix Progress를 사용합니다.
+`components/ui/`는 shadcn/ui CLI로 추가한 기본 컴포넌트입니다. Sidebar, Dialog, Label, Separator와 기존 Button, Input, Card, Badge, Tabs, Progress, Alert를 기본 스타일로 사용합니다. `components.json`에 별칭과 스타일을 설정했습니다.
+
+`app/globals.css`에는 Tailwind import, shadcn 테마 토큰(색상·폰트·모서리), 기본 base layer만 있습니다. 기존 화면 전용 CSS와 컴포넌트 덮어쓰기는 제거했습니다. 화면 배치는 페이지의 Tailwind 유틸리티로 구성합니다. 기본 경로 `/`에서 항상 같은 UI가 표시되며 별도 쿼리 옵션은 없습니다.
 
 추가 컴포넌트는 `apps/web`에서 `pnpm dlx shadcn@latest add <component>`로 설치합니다. 생성된 컴포넌트의 `cn` import는 `@/lib/utils`를 사용합니다.

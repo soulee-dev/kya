@@ -110,6 +110,15 @@ test("identity → sandbox → delegation, contract validation, and responsive l
     fullPage: true,
   });
   await page.setViewportSize({ width: 390, height: 844 });
+  await page.getByRole("button", { name: "Toggle Sidebar" }).click();
+  const mobileMenu = page.getByRole("dialog", { name: "Sidebar" });
+  await expect(mobileMenu).toBeVisible();
+  await expect(
+    mobileMenu.getByRole("link", { name: "Identity verification" }),
+  ).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(mobileMenu).toHaveCount(0);
+
   await page.screenshot({ path: "/tmp/kya-mobile.png", fullPage: true });
   expect(
     await page.evaluate(
