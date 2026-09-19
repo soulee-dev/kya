@@ -53,6 +53,6 @@ ISSUE_DELEGATION=1 bash scripts/fake-agent.sh
 
 `components/ui/`는 shadcn/ui CLI로 추가한 기본 컴포넌트입니다. Sidebar, Dialog, Label, Separator와 기존 Button, Input, Card, Badge, Tabs, Progress, Alert를 기본 스타일로 사용합니다. `components.json`에 별칭과 스타일을 설정했습니다.
 
-`app/globals.css`에는 Tailwind import, shadcn 테마 토큰(색상·폰트·모서리), 기본 base layer만 있습니다. 기존 화면 전용 CSS와 컴포넌트 덮어쓰기는 제거했습니다. 화면 배치는 페이지의 Tailwind 유틸리티로 구성합니다. 기본 경로 `/`에서 항상 같은 UI가 표시되며 별도 쿼리 옵션은 없습니다.
+`app/globals.css`에는 Tailwind import, shadcn 테마 토큰(색상·폰트·모서리), 기본 base layer만 있습니다. 기존 화면 전용 CSS와 컴포넌트 덮어쓰기는 제거했습니다. 화면 배치는 페이지의 Tailwind 유틸리티로 구성합니다. 신원 확인 → Agent 연결 → 위임 설정 → 결제 확인 중 현재 단계 하나만 표시하며, 완료 시 자동 진행하고 새로고침 시 서버 상태에서 복원합니다. 이전 단계는 읽기 전용으로 다시 확인할 수 있습니다. 마지막 단계의 결제 판정·지출 원장·위임 정보는 탭으로 나눕니다. 기본 경로 `/`에서 항상 같은 UI가 표시되며 별도 쿼리 옵션은 없습니다.
 
 추가 컴포넌트는 `apps/web`에서 `pnpm dlx shadcn@latest add <component>`로 설치합니다. 생성된 컴포넌트의 `cn` import는 `@/lib/utils`를 사용합니다.

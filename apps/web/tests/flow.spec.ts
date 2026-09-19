@@ -11,12 +11,17 @@ test("identity → sandbox → delegation, contract validation, and responsive l
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
   await expect(
-    page.getByRole("heading", { name: "Know your agent." }),
+    page.getByRole("heading", { name: "신원을 확인해 주세요" }),
   ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "데모 샌드박스 생성" }),
+  ).toHaveCount(0);
+  await expect(
+    page
+      .getByRole("navigation", { name: "위임 진행 단계" })
+      .getByRole("button", { name: "03 위임 설정" }),
   ).toBeDisabled();
-  await expect(page.locator('[data-slot="card"]')).toHaveCount(4);
+  await expect(page.locator('[data-slot="card"]')).toHaveCount(1);
   const businessTab = page.getByRole("tab", { name: "사업자 Business" });
   await businessTab.focus();
   await page.keyboard.press("ArrowRight");
@@ -28,7 +33,7 @@ test("identity → sandbox → delegation, contract validation, and responsive l
   await expect(businessTab).toHaveAttribute("aria-selected", "true");
   await expect(
     page.getByRole("progressbar", { name: "누적 지출" }),
-  ).toHaveAttribute("data-state", "indeterminate");
+  ).toHaveCount(0);
   await page.screenshot({
     path: "/tmp/kya-desktop-initial.png",
     fullPage: true,
@@ -40,11 +45,24 @@ test("identity → sandbox → delegation, contract validation, and responsive l
   await page.getByLabel("사업자명").fill("Acme Labs");
   await page.getByLabel("사업자등록번호").fill("123-45-67890");
   await page.getByRole("button", { name: "신원 확인하기" }).click();
-  await expect(page.getByText("사업자 · 신원 확인 완료")).toBeVisible();
+  await expect(
+    page.getByText("Acme Labs · 신원 확인 완료", { exact: true }),
+  ).toBeVisible();
   await page.getByRole("button", { name: "데모 샌드박스 생성" }).click();
   await expect(page.getByLabel("데모 Agent 주소")).toBeVisible();
   await page.getByLabel("데모 Agent 주소").fill(address);
   await page.getByRole("button", { name: "주소 연결" }).click();
+  await expect(page.getByLabel("허용 Merchant 주소")).toBeVisible();
+  await expect(page.getByLabel("데모 Agent 주소")).toHaveCount(0);
+  await page.getByRole("button", { name: "이전 단계" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Agent를 연결해 주세요" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "다음 단계" }).click();
+  await page.reload();
+  await expect(
+    page.getByRole("heading", { name: "얼마까지 쓸 수 있는지 정해 주세요" }),
+  ).toBeVisible();
   await expect(page.getByLabel("허용 Merchant 주소")).toBeVisible();
   const state = await (await request.get("/api/state")).json();
   const scope = {
@@ -110,15 +128,18 @@ test("identity → sandbox → delegation, contract validation, and responsive l
     fullPage: true,
   });
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.getByRole("button", { name: "Toggle Sidebar" }).click();
-  const mobileMenu = page.getByRole("dialog", { name: "Sidebar" });
-  await expect(mobileMenu).toBeVisible();
+  await page.getByRole("tab", { name: "지출 원장" }).click();
   await expect(
-    mobileMenu.getByRole("link", { name: "Identity verification" }),
+    page.getByRole("progressbar", { name: "누적 지출" }),
+  ).toHaveAttribute("data-state", "indeterminate");
+  await expect(
+    page.getByRole("heading", { name: "Verifier decisions" }),
+  ).toHaveCount(0);
+  await page.getByRole("tab", { name: "위임 정보" }).click();
+  await expect(
+    page.getByRole("button", { name: "Delegation JWT 복사" }),
   ).toBeVisible();
-  await page.keyboard.press("Escape");
-  await expect(mobileMenu).toHaveCount(0);
-
+  await page.getByRole("tab", { name: "결제 판정" }).click();
   await page.screenshot({ path: "/tmp/kya-mobile.png", fullPage: true });
   expect(
     await page.evaluate(
