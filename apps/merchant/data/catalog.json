@@ -1,0 +1,929 @@
+[
+  {
+    "id": "29cm-3012025",
+    "source": "29cm",
+    "title": "[Silver925] 심플 기본 진주 귀걸이_4size",
+    "brand": "골드앤디어",
+    "priceKRW": 18720,
+    "amount": "187200",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/next-product/2025/01/06/37d17ea1a53a40859d7f145533c21006_20250106150030.jpg",
+    "url": "https://www.29cm.co.kr/product/3012025",
+    "category": "accessory",
+    "tags": [
+      "귀걸이",
+      "여성",
+      "진주"
+    ]
+  },
+  {
+    "id": "29cm-1029133",
+    "source": "29cm",
+    "title": "[29CM 단독] 14k 골드필드 데일리 스터드 귀걸이 3종 세트 (14k골드필드) #SET09",
+    "brand": "룬느",
+    "priceKRW": 36400,
+    "amount": "364000",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/next-product/2021/03/22/196b24b5d39e4ff4880540d8b356c303_20210322170903.jpg",
+    "url": "https://www.29cm.co.kr/product/1029133",
+    "category": "accessory",
+    "tags": [
+      "귀걸이",
+      "여성",
+      "진주"
+    ]
+  },
+  {
+    "id": "musinsa-6938906",
+    "source": "musinsa",
+    "title": "플리츠 미니 스커트_MIWWHG931C",
+    "brand": "미쏘",
+    "priceKRW": 39920,
+    "amount": "399200",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20260728/6938906/6938906_17884177733588_500.jpg",
+    "url": "https://www.musinsa.com/products/6938906",
+    "category": "skirt",
+    "tags": [
+      "미니",
+      "스커트",
+      "여성",
+      "플리츠"
+    ]
+  },
+  {
+    "id": "29cm-4118306",
+    "source": "29cm",
+    "title": "세이렌 라운드 로퍼 (3cm)",
+    "brand": "사뿐",
+    "priceKRW": 48370,
+    "amount": "483700",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/next-product/2026/08/12/4b15dc13a57f4830a4c14400afad6884_20260812101430.jpg",
+    "url": "https://www.29cm.co.kr/product/4118306",
+    "category": "shoes",
+    "tags": [
+      "로퍼",
+      "여성"
+    ]
+  },
+  {
+    "id": "musinsa-4522444",
+    "source": "musinsa",
+    "title": "메리제인 크리퍼 - (그런지 스피릿) 블랙 / VN000D07BLK1",
+    "brand": "반스",
+    "priceKRW": 50990,
+    "amount": "509900",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20241016/4522444/4522444_17290616747170_500.jpg",
+    "url": "https://www.musinsa.com/products/4522444",
+    "category": "shoes",
+    "tags": [
+      "메리제인",
+      "여성"
+    ]
+  },
+  {
+    "id": "musinsa-1827851",
+    "source": "musinsa",
+    "title": "하트 페이즐리 실크 미니 스카프 (2 color)",
+    "brand": "비비드솔리드",
+    "priceKRW": 53100,
+    "amount": "531000",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20210305/1827851/1827851_1_500.jpg",
+    "url": "https://www.musinsa.com/products/1827851",
+    "category": "accessory",
+    "tags": [
+      "미니",
+      "스카프",
+      "실크",
+      "여성"
+    ]
+  },
+  {
+    "id": "musinsa-7060398",
+    "source": "musinsa",
+    "title": "오버사이즈드 젠느 체크 셔츠-네이비",
+    "brand": "비터셀즈",
+    "priceKRW": 54410,
+    "amount": "544100",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20260812/7060398/7060398_17884822503333_500.jpg",
+    "url": "https://www.musinsa.com/products/7060398",
+    "category": "top",
+    "tags": [
+      "블라우스",
+      "여성"
+    ]
+  },
+  {
+    "id": "musinsa-7144910",
+    "source": "musinsa",
+    "title": "chiffon silk scarf petit clover black",
+    "brand": "삭스어필",
+    "priceKRW": 56050,
+    "amount": "560500",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20260824/7144910/7144910_17881612930166_500.jpg",
+    "url": "https://www.musinsa.com/products/7144910",
+    "category": "accessory",
+    "tags": [
+      "스카프",
+      "실크",
+      "여성"
+    ]
+  },
+  {
+    "id": "29cm-3463914",
+    "source": "29cm",
+    "title": "니나 숏 플리츠 스커트 / NINA SHORT PLEATS SKIRT_3colors",
+    "brand": "룩캐스트",
+    "priceKRW": 56230,
+    "amount": "562300",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/item/202508/11f084b30f669a0cb69cf7863fc04410.jpg",
+    "url": "https://www.29cm.co.kr/product/3463914",
+    "category": "skirt",
+    "tags": [
+      "스커트",
+      "여성",
+      "플리츠"
+    ]
+  },
+  {
+    "id": "musinsa-7033811",
+    "source": "musinsa",
+    "title": "레너드 라운드 셔링 로퍼 (2.5cm)",
+    "brand": "사뿐",
+    "priceKRW": 57310,
+    "amount": "573100",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20260810/7033811/7033811_17864992984731_500.jpg",
+    "url": "https://www.musinsa.com/products/7033811",
+    "category": "shoes",
+    "tags": [
+      "가죽",
+      "로퍼",
+      "여성"
+    ]
+  },
+  {
+    "id": "29cm-4081080",
+    "source": "29cm",
+    "title": "Flower Mid Sleeve Shirt_Blue",
+    "brand": "108파운드",
+    "priceKRW": 65480,
+    "amount": "654800",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/item/202608/11f1a1e42608c3ac8fdcb1f3c61e383a.jpg",
+    "url": "https://www.29cm.co.kr/product/4081080",
+    "category": "top",
+    "tags": [
+      "블라우스",
+      "여성"
+    ]
+  },
+  {
+    "id": "29cm-3025772",
+    "source": "29cm",
+    "title": "플리츠 나일론 풀 스커트_WHITE",
+    "brand": "아티드",
+    "priceKRW": 67050,
+    "amount": "670500",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/item/202501/11efda28e6be42108f0ad771756c4e5b.jpg",
+    "url": "https://www.29cm.co.kr/product/3025772",
+    "category": "skirt",
+    "tags": [
+      "스커트",
+      "여성",
+      "플리츠"
+    ]
+  },
+  {
+    "id": "musinsa-6780366",
+    "source": "musinsa",
+    "title": "Corduroy Mid Sleeve Shirt_Khaki Beige",
+    "brand": "108파운드",
+    "priceKRW": 69920,
+    "amount": "699200",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20260703/6780366/6780366_17865960017678_500.jpg",
+    "url": "https://www.musinsa.com/products/6780366",
+    "category": "top",
+    "tags": [
+      "블라우스",
+      "여성"
+    ]
+  },
+  {
+    "id": "musinsa-6800975",
+    "source": "musinsa",
+    "title": "우븐 스판 미니 드레스 [블랙]",
+    "brand": "키르시",
+    "priceKRW": 76160,
+    "amount": "761600",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20260707/6800975/6800975_17871012357300_500.jpg",
+    "url": "https://www.musinsa.com/products/6800975",
+    "category": "dress",
+    "tags": [
+      "미니",
+      "여성",
+      "원피스"
+    ]
+  },
+  {
+    "id": "29cm-4129760",
+    "source": "29cm",
+    "title": "[2차] Cove Blouse_Mud Beige",
+    "brand": "베뉴엣",
+    "priceKRW": 79380,
+    "amount": "793800",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/item/202609/11f1acda98bc21718499b1d406a9d5e1.jpg",
+    "url": "https://www.29cm.co.kr/product/4129760",
+    "category": "top",
+    "tags": [
+      "블라우스",
+      "여성"
+    ]
+  },
+  {
+    "id": "29cm-3846370",
+    "source": "29cm",
+    "title": "울 트위드 싱글 카라 자켓_TWWJKP72100",
+    "brand": "리스트",
+    "priceKRW": 89000,
+    "amount": "890000",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/next-product/2026/03/11/49bdc0f311f64dd38feb44082991340d_20260311163902.jpg",
+    "url": "https://www.29cm.co.kr/product/3846370",
+    "category": "jacket",
+    "tags": [
+      "여성",
+      "울",
+      "자켓",
+      "트위드"
+    ]
+  },
+  {
+    "id": "musinsa-5586643",
+    "source": "musinsa",
+    "title": "울 혼방 더블 롱코트_MIWJHG112B",
+    "brand": "미쏘",
+    "priceKRW": 89900,
+    "amount": "899000",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20251014/5586643/5586643_17604072661438_500.jpg",
+    "url": "https://www.musinsa.com/products/5586643",
+    "category": "jacket",
+    "tags": [
+      "여성",
+      "울",
+      "코트"
+    ]
+  },
+  {
+    "id": "29cm-4160195",
+    "source": "29cm",
+    "title": "FAIR LADY 여성 클래식 셔링 페니 로퍼 FAIPUC6879WF1",
+    "brand": "금강",
+    "priceKRW": 93500,
+    "amount": "935000",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/item/202608/11f19c4dbdf0de4c85e151e8137f3e96.jpg",
+    "url": "https://www.29cm.co.kr/product/4160195",
+    "category": "shoes",
+    "tags": [
+      "로퍼",
+      "여성"
+    ]
+  },
+  {
+    "id": "29cm-4115383",
+    "source": "29cm",
+    "title": "[묵화 PICK] Ruby Vintage Cotton Jacket-Navy",
+    "brand": "비터셀즈",
+    "priceKRW": 93920,
+    "amount": "939200",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/item/202608/11f1a28e9412ed8e85e11b98fbdf94ab.jpg",
+    "url": "https://www.29cm.co.kr/product/4115383",
+    "category": "jacket",
+    "tags": [
+      "블레이저",
+      "여성"
+    ]
+  },
+  {
+    "id": "29cm-3113831",
+    "source": "29cm",
+    "title": "스트랩 미니 백_black",
+    "brand": "파사드패턴",
+    "priceKRW": 98000,
+    "amount": "980000",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/item/202504/11f023d8202d685cb13155490412f1a6.jpg",
+    "url": "https://www.29cm.co.kr/product/3113831",
+    "category": "bag",
+    "tags": [
+      "미니",
+      "미니백",
+      "여성"
+    ]
+  },
+  {
+    "id": "musinsa-7078417",
+    "source": "musinsa",
+    "title": "CASHMERE BLENDED V-NECK WOOL KNIT [TIFA04SW12]_Charcoal",
+    "brand": "틸아이다이",
+    "priceKRW": 98010,
+    "amount": "980100",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20260814/7078417/7078417_17866703125802_500.jpg",
+    "url": "https://www.musinsa.com/products/7078417",
+    "category": "knit",
+    "tags": [
+      "니트",
+      "여성",
+      "캐시미어"
+    ]
+  },
+  {
+    "id": "musinsa-4619956",
+    "source": "musinsa",
+    "title": "우먼즈 레귤러 핏 3버튼 블레이저 [블랙]",
+    "brand": "무신사 스탠다드 우먼",
+    "priceKRW": 99900,
+    "amount": "999000",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20241118/4619956/4619956_17836670737424_500.jpg",
+    "url": "https://www.musinsa.com/products/4619956",
+    "category": "jacket",
+    "tags": [
+      "블레이저",
+      "여성",
+      "자켓"
+    ]
+  },
+  {
+    "id": "29cm-3774547",
+    "source": "29cm",
+    "title": "트레일블레이저 10/20/30 (5 color)",
+    "brand": "살로몬",
+    "priceKRW": 100000,
+    "amount": "1000000",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/item/202606/11f1692a1109bead9090b1d3d8fe650a.png",
+    "url": "https://www.29cm.co.kr/product/3774547",
+    "category": "jacket",
+    "tags": [
+      "블레이저",
+      "여성"
+    ]
+  },
+  {
+    "id": "29cm-3978052",
+    "source": "29cm",
+    "title": "RIVA BAG _ black 숄더백 토트백",
+    "brand": "모어모르",
+    "priceKRW": 104400,
+    "amount": "1044000",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/item/202608/11f18fba58ffbd5d9645953fa3dcc24c.jpg",
+    "url": "https://www.29cm.co.kr/product/3978052",
+    "category": "bag",
+    "tags": [
+      "숄더",
+      "숄더백",
+      "여성"
+    ]
+  },
+  {
+    "id": "musinsa-4384039",
+    "source": "musinsa",
+    "title": "프렌치 울 트위드 블레이저",
+    "brand": "수아레",
+    "priceKRW": 109900,
+    "amount": "1099000",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20240829/4384039/4384039_17258778553515_500.jpg",
+    "url": "https://www.musinsa.com/products/4384039",
+    "category": "jacket",
+    "tags": [
+      "블레이저",
+      "여성",
+      "울",
+      "자켓",
+      "트위드"
+    ]
+  },
+  {
+    "id": "29cm-4116788",
+    "source": "29cm",
+    "title": "[2차 리오더 / 유하 PICK] 렌타백 35 - 다이아 버건디",
+    "brand": "파인드카푸어",
+    "priceKRW": 110700,
+    "amount": "1107000",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/item/202609/11f1a59a83baf40cb4a94f8a7683311b.jpg",
+    "url": "https://www.29cm.co.kr/product/4116788",
+    "category": "bag",
+    "tags": [
+      "숄더백",
+      "여성"
+    ]
+  },
+  {
+    "id": "musinsa-7096453",
+    "source": "musinsa",
+    "title": "[화야 PICK] Modest V-neck Cashmere Knit (Grape)",
+    "brand": "토아베",
+    "priceKRW": 122000,
+    "amount": "1220000",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20260818/7096453/7096453_17871167318862_500.jpg",
+    "url": "https://www.musinsa.com/products/7096453",
+    "category": "knit",
+    "tags": [
+      "니트",
+      "여성",
+      "캐시미어"
+    ]
+  },
+  {
+    "id": "29cm-4201479",
+    "source": "29cm",
+    "title": "OVERDUE WOOL CARDIGAN_VIOLET",
+    "brand": "오버듀플레어",
+    "priceKRW": 125100,
+    "amount": "1251000",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/item/202609/11f1aca6d09eea118499ffd0e00a5240.jpg",
+    "url": "https://www.29cm.co.kr/product/4201479",
+    "category": "knit",
+    "tags": [
+      "가디건",
+      "니트",
+      "여성"
+    ]
+  },
+  {
+    "id": "musinsa-2422537",
+    "source": "musinsa",
+    "title": "Vanessa collar silky long dress_BEIGE",
+    "brand": "에이리프",
+    "priceKRW": 142500,
+    "amount": "1425000",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20220316/2422537/2422537_1_500.jpg",
+    "url": "https://www.musinsa.com/products/2422537",
+    "category": "dress",
+    "tags": [
+      "실크",
+      "여성",
+      "원피스"
+    ]
+  },
+  {
+    "id": "29cm-4190625",
+    "source": "29cm",
+    "title": "[박가을,다나 PICK] CUTTING COTTON LAYERED SKIRT (GRAY BEIGE)",
+    "brand": "더블유케이엔디 프로젝트",
+    "priceKRW": 177840,
+    "amount": "1778400",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/item/202609/11f1ac16a01366d784994f418f046a08.jpg",
+    "url": "https://www.29cm.co.kr/product/4190625",
+    "category": "skirt",
+    "tags": [
+      "스커트",
+      "여성",
+      "플리츠"
+    ]
+  },
+  {
+    "id": "29cm-3466428",
+    "source": "29cm",
+    "title": "BORI 캐시미어 100% 슬리브 니트 [에코페이퍼]",
+    "brand": "몰리올리",
+    "priceKRW": 195440,
+    "amount": "1954400",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/item/202508/11f083cda70ee170b69c3b021ab73466.jpg",
+    "url": "https://www.29cm.co.kr/product/3466428",
+    "category": "knit",
+    "tags": [
+      "니트",
+      "여성",
+      "캐시미어"
+    ]
+  },
+  {
+    "id": "musinsa-5449130",
+    "source": "musinsa",
+    "title": "캐시미어 울 핸드메이드 하프 코트 그레이 MDCT013GRAY",
+    "brand": "몽돌",
+    "priceKRW": 201600,
+    "amount": "2016000",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20250912/5449130/5449130_17896054986860_500.jpg",
+    "url": "https://www.musinsa.com/products/5449130",
+    "category": "jacket",
+    "tags": [
+      "여성",
+      "울",
+      "캐시미어",
+      "코트"
+    ]
+  },
+  {
+    "id": "29cm-3615575",
+    "source": "29cm",
+    "title": "[2컬러] 캐시미어 더플 코트",
+    "brand": "제로스트릿",
+    "priceKRW": 202290,
+    "amount": "2022900",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/item/202511/11f0c603caf76e87a5636b6f53c4de22.jpg",
+    "url": "https://www.29cm.co.kr/product/3615575",
+    "category": "jacket",
+    "tags": [
+      "여성",
+      "캐시미어",
+      "코트"
+    ]
+  },
+  {
+    "id": "musinsa-4324507",
+    "source": "musinsa",
+    "title": "O3735 라운드 트위드 재킷_Yellow",
+    "brand": "반원 아틀리에",
+    "priceKRW": 204040,
+    "amount": "2040400",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20240813/4324507/4324507_17253526837255_500.jpg",
+    "url": "https://www.musinsa.com/products/4324507",
+    "category": "jacket",
+    "tags": [
+      "여성",
+      "자켓",
+      "트위드"
+    ]
+  },
+  {
+    "id": "musinsa-5579010",
+    "source": "musinsa",
+    "title": "(우먼) 하이넥 울 롱코트_챠콜",
+    "brand": "키뮤어",
+    "priceKRW": 209300,
+    "amount": "2093000",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20251012/5579010/5579010_17602672273974_500.jpg",
+    "url": "https://www.musinsa.com/products/5579010",
+    "category": "jacket",
+    "tags": [
+      "여성",
+      "울",
+      "캐시미어",
+      "코트"
+    ]
+  },
+  {
+    "id": "29cm-4131162",
+    "source": "29cm",
+    "title": "High Neck Wool Jacket_Charcoal",
+    "brand": "샌드릭",
+    "priceKRW": 209790,
+    "amount": "2097900",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/item/202608/11f196ea171bb03a8fdc4f8ef75e3a5d.jpg",
+    "url": "https://www.29cm.co.kr/product/4131162",
+    "category": "jacket",
+    "tags": [
+      "블레이저",
+      "여성"
+    ]
+  },
+  {
+    "id": "musinsa-7008459",
+    "source": "musinsa",
+    "title": "[ON[W]]브라운 스웨이드 코듀로이 카라 자켓",
+    "brand": "마인드브릿지 우먼",
+    "priceKRW": 219000,
+    "amount": "2190000",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/prd_img/20260806/7008459/detail_7008459_17884862529594_500.jpg",
+    "url": "https://www.musinsa.com/products/7008459",
+    "category": "jacket",
+    "tags": [
+      "여성",
+      "자켓"
+    ]
+  },
+  {
+    "id": "29cm-3802232",
+    "source": "29cm",
+    "title": "[셀럽,루피타,령은Pick][4th]Mouchou High Neck Leather Jumper_2colors",
+    "brand": "르메메",
+    "priceKRW": 238000,
+    "amount": "2380000",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/item/202609/11f1b31c1947118494a3533106607c1f.jpg",
+    "url": "https://www.29cm.co.kr/product/3802232",
+    "category": "jacket",
+    "tags": [
+      "여성",
+      "자켓"
+    ]
+  },
+  {
+    "id": "29cm-2629426",
+    "source": "29cm",
+    "title": "Rueda Mini Bag_3color",
+    "brand": "아포아",
+    "priceKRW": 238000,
+    "amount": "2380000",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/item/202404/11eefd661548ad3a9367d34b0bc61da9.jpg",
+    "url": "https://www.29cm.co.kr/product/2629426",
+    "category": "bag",
+    "tags": [
+      "미니백",
+      "여성"
+    ]
+  },
+  {
+    "id": "musinsa-7008391",
+    "source": "musinsa",
+    "title": "[W]카멜 스웨이드 세미 오버핏 테일러드 자켓",
+    "brand": "마인드브릿지 우먼",
+    "priceKRW": 239000,
+    "amount": "2390000",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20260806/7008391/7008391_17894380676294_500.jpg",
+    "url": "https://www.musinsa.com/products/7008391",
+    "category": "jacket",
+    "tags": [
+      "여성",
+      "자켓"
+    ]
+  },
+  {
+    "id": "musinsa-3552584",
+    "source": "musinsa",
+    "title": "소프트 캐시미어 싱글 발마칸 코트 [M.GREY]",
+    "brand": "드로우핏 우먼",
+    "priceKRW": 246400,
+    "amount": "2464000",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20230912/3552584/3552584_16945756598426_500.jpg",
+    "url": "https://www.musinsa.com/products/3552584",
+    "category": "jacket",
+    "tags": [
+      "여성",
+      "캐시미어",
+      "코트"
+    ]
+  },
+  {
+    "id": "29cm-2900533",
+    "source": "29cm",
+    "title": "울 블렌드 트위드 싱글 자켓 - 너트 베이지",
+    "brand": "엣드맹",
+    "priceKRW": 318000,
+    "amount": "3180000",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/item/202410/11ef8d2355ff96f3b8a2a147f29bbe86.jpg",
+    "url": "https://www.29cm.co.kr/product/2900533",
+    "category": "jacket",
+    "tags": [
+      "블레이저",
+      "여성",
+      "울",
+      "트위드"
+    ]
+  },
+  {
+    "id": "29cm-4205262",
+    "source": "29cm",
+    "title": "Roven Wool Tailored Jacket (Melange Oat)",
+    "brand": "포 유어 아이즈 온리",
+    "priceKRW": 323100,
+    "amount": "3231000",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/item/202609/11f1ad9ac7f495e794462ba225d35357.jpeg",
+    "url": "https://www.29cm.co.kr/product/4205262",
+    "category": "jacket",
+    "tags": [
+      "블레이저",
+      "여성"
+    ]
+  },
+  {
+    "id": "musinsa-4452218",
+    "source": "musinsa",
+    "title": "벨란디 캐시미어 블렌드 하프 코트 (블랙)",
+    "brand": "쿠어",
+    "priceKRW": 324000,
+    "amount": "3240000",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20240923/4452218/4452218_17271834854716_500.jpg",
+    "url": "https://www.musinsa.com/products/4452218",
+    "category": "jacket",
+    "tags": [
+      "여성",
+      "캐시미어",
+      "코트"
+    ]
+  },
+  {
+    "id": "29cm-2868378",
+    "source": "29cm",
+    "title": "Mikado Silk Volume Midi Dress Ivory",
+    "brand": "유아이 제이아이",
+    "priceKRW": 359000,
+    "amount": "3590000",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/item/202410/11ef813cf41089b28fb289da3d54da3d.jpg",
+    "url": "https://www.29cm.co.kr/product/2868378",
+    "category": "dress",
+    "tags": [
+      "실크",
+      "여성",
+      "원피스"
+    ]
+  },
+  {
+    "id": "29cm-3624966",
+    "source": "29cm",
+    "title": "Cashmere Blend Handmade Single Jacket_Black",
+    "brand": "이지오",
+    "priceKRW": 518000,
+    "amount": "5180000",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/next-product/2025/11/05/ef60bcb3420546afb5615d28ff34faf0_20251105134024.jpg",
+    "url": "https://www.29cm.co.kr/product/3624966",
+    "category": "jacket",
+    "tags": [
+      "여성",
+      "캐시미어",
+      "코트"
+    ]
+  },
+  {
+    "id": "29cm-2929740",
+    "source": "29cm",
+    "title": "[까이지엔느] V넥 언밸런스 롱 코트",
+    "brand": "까이에",
+    "priceKRW": 546000,
+    "amount": "5460000",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/item/202411/11ef9a900ede91dbb0a7779242bd3a49.jpg",
+    "url": "https://www.29cm.co.kr/product/2929740",
+    "category": "jacket",
+    "tags": [
+      "여성",
+      "울",
+      "코트"
+    ]
+  },
+  {
+    "id": "musinsa-6063118",
+    "source": "musinsa",
+    "title": "esy cashmere mac Coat (블랙)",
+    "brand": "르나브",
+    "priceKRW": 558600,
+    "amount": "5586000",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20260227/6063118/6063118_17721225331432_500.jpg",
+    "url": "https://www.musinsa.com/products/6063118",
+    "category": "jacket",
+    "tags": [
+      "여성",
+      "캐시미어",
+      "코트"
+    ]
+  },
+  {
+    "id": "musinsa-6063126",
+    "source": "musinsa",
+    "title": "esy cashmere mac Coat (버터)",
+    "brand": "르나브",
+    "priceKRW": 558600,
+    "amount": "5586000",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20260227/6063126/6063126_17721228632492_500.jpg",
+    "url": "https://www.musinsa.com/products/6063126",
+    "category": "jacket",
+    "tags": [
+      "여성",
+      "캐시미어",
+      "코트"
+    ]
+  },
+  {
+    "id": "29cm-3553096",
+    "source": "29cm",
+    "title": "캐시미어 벨티드 더블 코트_camel",
+    "brand": "파사드패턴",
+    "priceKRW": 568000,
+    "amount": "5680000",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/next-product/2025/09/29/f042bcd7af394f9abedfcb37ecaa096e_20250929110410.jpg",
+    "url": "https://www.29cm.co.kr/product/3553096",
+    "category": "jacket",
+    "tags": [
+      "여성",
+      "캐시미어",
+      "코트"
+    ]
+  },
+  {
+    "id": "musinsa-4497310",
+    "source": "musinsa",
+    "title": "케이프 숄 초커 넥 블랙 원피스",
+    "brand": "까이에",
+    "priceKRW": 587000,
+    "amount": "5870000",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20241008/4497310/4497310_17283656334929_500.jpg",
+    "url": "https://www.musinsa.com/products/4497310",
+    "category": "dress",
+    "tags": [
+      "실크",
+      "여성",
+      "원피스"
+    ]
+  },
+  {
+    "id": "musinsa-4925876",
+    "source": "musinsa",
+    "title": "슬리브리스 레이어드 크로스 디테일 언밸런스 실크 원피스",
+    "brand": "까이에",
+    "priceKRW": 785000,
+    "amount": "7850000",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20250321/4925876/4925876_17425196076908_500.jpg",
+    "url": "https://www.musinsa.com/products/4925876",
+    "category": "dress",
+    "tags": [
+      "실크",
+      "여성",
+      "원피스"
+    ]
+  },
+  {
+    "id": "musinsa-6271926",
+    "source": "musinsa",
+    "title": "스트라이프 실크 플러터 슬리브 언밸런스 원피스",
+    "brand": "까이에",
+    "priceKRW": 864600,
+    "amount": "8646000",
+    "currency": "USDC",
+    "imageUrl": "https://image.msscdn.net/images/goods_img/20260407/6271926/6271926_17755536877885_500.jpg",
+    "url": "https://www.musinsa.com/products/6271926",
+    "category": "dress",
+    "tags": [
+      "실크",
+      "여성",
+      "원피스"
+    ]
+  },
+  {
+    "id": "29cm-3905793",
+    "source": "29cm",
+    "title": "아트 그래픽 쉬폰 실크 레이어드 롱 슬리브 원피스",
+    "brand": "까이에",
+    "priceKRW": 1060400,
+    "amount": "10604000",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/item/202604/11f12f3f2861d0c49ec5b1414e6f0347.jpg",
+    "url": "https://www.29cm.co.kr/product/3905793",
+    "category": "dress",
+    "tags": [
+      "실크",
+      "여성",
+      "원피스"
+    ]
+  },
+  {
+    "id": "29cm-2565827",
+    "source": "29cm",
+    "title": "[까이에] 플레어 소매 블랙 비즈 트리밍 실크 원피스",
+    "brand": "까이에",
+    "priceKRW": 1486000,
+    "amount": "14860000",
+    "currency": "USDC",
+    "imageUrl": "https://img.29cm.co.kr/item/202404/11eef090833b1caa936757c1f78144e9.jpg",
+    "url": "https://www.29cm.co.kr/product/2565827",
+    "category": "dress",
+    "tags": [
+      "실크",
+      "여성",
+      "원피스"
+    ]
+  }
+]
