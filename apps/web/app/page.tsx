@@ -277,7 +277,9 @@ export default function Home() {
           <dd>
             {delegation.fundingStatus === "simulated"
               ? "데모 · 실제 충전 없음"
-              : "20 USDC 충전 완료"}
+              : delegation.fundingStatus === "manual"
+                ? "Circle faucet 수동 충전"
+                : "20 USDC 충전 완료"}
           </dd>
         </div>
       </dl>
@@ -815,7 +817,9 @@ export default function Home() {
                   <AlertDescription>
                     {delegation?.fundingStatus === "simulated"
                       ? "데모 · 실제 충전 없음"
-                      : "Agent의 결제를 실시간으로 확인합니다."}
+                      : delegation?.fundingStatus === "manual"
+                        ? "Agent 주소를 Circle faucet에 넣어 USDC를 충전하면 Agent가 쇼핑을 시작합니다."
+                        : "Agent의 결제를 실시간으로 확인합니다."}
                   </AlertDescription>
                 </Alert>
                 <Tabs value={monitorTab} onValueChange={setMonitorTab}>
