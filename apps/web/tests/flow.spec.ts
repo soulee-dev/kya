@@ -16,6 +16,19 @@ test("identity → sandbox → delegation, contract validation, and responsive l
   await expect(
     page.getByRole("button", { name: "데모 샌드박스 생성" }),
   ).toBeDisabled();
+  await expect(page.locator('[data-slot="card"]')).toHaveCount(4);
+  const businessTab = page.getByRole("tab", { name: "사업자 Business" });
+  await businessTab.focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(
+    page.getByRole("tab", { name: "자연인 Individual" }),
+  ).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByLabel("사업자등록번호")).toHaveCount(0);
+  await page.keyboard.press("ArrowLeft");
+  await expect(businessTab).toHaveAttribute("aria-selected", "true");
+  await expect(
+    page.getByRole("progressbar", { name: "누적 지출" }),
+  ).toHaveAttribute("data-state", "indeterminate");
   await page.screenshot({
     path: "/tmp/kya-desktop-initial.png",
     fullPage: true,

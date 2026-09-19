@@ -1,6 +1,6 @@
 # KYA Web
 
-Next.js App Router + TypeScript + pnpm. `apps/verifier`와 독립적으로 실행하는 Principal 신원 확인·Delegation 발급 콘솔입니다.
+Next.js App Router + TypeScript + pnpm + shadcn/ui (Radix) + Tailwind CSS v4. `apps/verifier`와 독립적으로 실행하는 Principal 신원 확인·Delegation 발급 콘솔입니다.
 
 ## 실행
 
@@ -48,3 +48,9 @@ ISSUE_DELEGATION=1 bash scripts/fake-agent.sh
 ```
 
 브라우저 테스트는 포트 3100과 임시 데이터 디렉터리를 사용합니다. 화면 진행, 잘못된 Scope 거절, 미발급 404, JWT 공개키 검증, 중복 발급 멱등성, 다른 Agent 등록 거절, 모바일 가로 넘침을 확인합니다.
+
+## UI 컴포넌트
+
+`components/ui/`는 shadcn/ui CLI로 추가한 Button, Input, Card, Badge, Tabs, Progress, Alert 컴포넌트입니다. `components.json`에 별칭과 스타일을 설정했습니다. `app/globals.css`의 CSS 변수로 색상과 모서리를 조정하고, 화면 배치용 스타일은 같은 파일에 유지합니다. 사업자/자연인 선택은 키보드 방향키를 지원하는 Radix Tabs, 지출 게이지는 Radix Progress를 사용합니다.
+
+추가 컴포넌트는 `apps/web`에서 `pnpm dlx shadcn@latest add <component>`로 설치합니다. 생성된 컴포넌트의 `cn` import는 `@/lib/utils`를 사용합니다.

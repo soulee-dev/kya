@@ -21,6 +21,20 @@ import {
   X,
 } from "lucide-react";
 import { parseUnits, formatUnits } from "viem";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
+import { Alert } from "@/components/ui/alert";
 import { NETWORK, USDC, type Decision, type PublicState } from "@/lib/types";
 const short = (value: string) =>
   value.length > 22 ? `${value.slice(0, 10)}…${value.slice(-6)}` : value;
@@ -57,7 +71,7 @@ async function api(path: string, body?: unknown) {
   if (!response.ok) throw new Error(result.error || "요청에 실패했습니다.");
   return result;
 }
-function Badge({
+function StatusBadge({
   children,
   tone = "",
 }: {
@@ -65,10 +79,10 @@ function Badge({
   tone?: string;
 }) {
   return (
-    <span className={`badge ${tone}`}>
+    <Badge variant="outline" className={`status-badge ${tone}`}>
       <span className="status-dot" />
       {children}
-    </span>
+    </Badge>
   );
 }
 export default function Home() {
@@ -225,10 +239,15 @@ export default function Home() {
             </div>
             <span className="green-dot" />
           </div>
-          <button className="help-button" onClick={() => setHelp(!help)}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="help-button"
+            onClick={() => setHelp(!help)}
+          >
             <CircleHelp size={17} /> KYA는 어떻게 동작하나요?{" "}
             <ArrowUpRight size={14} />
-          </button>
+          </Button>
           <div className="profile">
             <div className="avatar">{principal?.name.slice(0, 1) || "P"}</div>
             <div>
@@ -282,9 +301,14 @@ export default function Home() {
                 금액을 지출 원장에 기록합니다. 이 해커톤의 신원 확인은 실제
                 심사를 수행하지 않는 데모 스텁입니다.
               </p>
-              <button aria-label="안내 닫기" onClick={() => setHelp(false)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                aria-label="안내 닫기"
+                onClick={() => setHelp(false)}
+              >
                 <X size={18} />
-              </button>
+              </Button>
             </div>
           )}
           <section className="journey" aria-label="위임 진행 단계">
@@ -327,28 +351,37 @@ export default function Home() {
             ))}
           </section>
           {error && (
-            <div className="error-banner" role="alert">
+            <Alert variant="destructive" className="error-banner" role="alert">
               <span>{error}</span>
-              <button onClick={() => setError("")} aria-label="오류 닫기">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setError("")}
+                aria-label="오류 닫기"
+              >
                 <X size={16} />
-              </button>
-            </div>
+              </Button>
+            </Alert>
           )}
           <div className="dashboard">
-            <section className="card identity-card" id="identity">
-              <div className="card-heading">
+            <Card role="region" className="card identity-card" id="identity">
+              <CardHeader className="card-heading">
                 <div className="heading-icon orange">
                   <Fingerprint size={20} />
                 </div>
                 <div>
-                  <h2>Identity & delegation</h2>
-                  <p>신원을 확인하고 Agent의 지출 범위를 정하세요.</p>
+                  <CardTitle role="heading" aria-level={2}>
+                    Identity & delegation
+                  </CardTitle>
+                  <CardDescription>
+                    신원을 확인하고 Agent의 지출 범위를 정하세요.
+                  </CardDescription>
                 </div>
-                <Badge tone={principal ? "green" : ""}>
+                <StatusBadge tone={principal ? "green" : ""}>
                   {principal ? "확인됨" : "확인 대기"}
-                </Badge>
-              </div>
-              <div className="card-body">
+                </StatusBadge>
+              </CardHeader>
+              <CardContent className="card-body">
                 <div className="section-title">
                   <span>01</span>
                   <h3>Principal 신원 확인</h3>
@@ -369,7 +402,7 @@ export default function Home() {
                       </p>
                       <code title={principal.did}>{short(principal.did)}</code>
                     </div>
-                    <Badge tone="green">Verified</Badge>
+                    <StatusBadge tone="green">Verified</StatusBadge>
                   </div>
                 ) : (
                   <form
@@ -384,68 +417,84 @@ export default function Home() {
                       );
                     }}
                   >
-                    <div className="segmented">
-                      <button
-                        type="button"
-                        className={entityType === "business" ? "selected" : ""}
-                        onClick={() => setEntityType("business")}
+                    <Tabs
+                      value={entityType}
+                      onValueChange={(value) =>
+                        setEntityType(value as "business" | "person")
+                      }
+                      className="mb-5"
+                    >
+                      <TabsList
+                        aria-label="Principal 실체 유형"
+                        className="w-full"
                       >
-                        <Globe2 size={15} />
-                        사업자 <span>Business</span>
-                      </button>
-                      <button
-                        type="button"
-                        className={entityType === "person" ? "selected" : ""}
-                        onClick={() => setEntityType("person")}
-                      >
-                        <Fingerprint size={15} />
-                        자연인 <span>Individual</span>
-                      </button>
-                    </div>
-                    <label>
-                      {entityType === "business" ? "사업자명" : "이름"}{" "}
-                      <span>*</span>
-                      <input
-                        required
-                        minLength={2}
-                        maxLength={100}
-                        placeholder={
-                          entityType === "business"
-                            ? "예: Acme Labs"
-                            : "실명을 입력해 주세요"
-                        }
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        autoComplete="organization"
-                      />
-                    </label>
-                    {entityType === "business" && (
-                      <label>
-                        사업자등록번호 <span>*</span>
-                        <input
-                          required
-                          pattern="[0-9]{3}-?[0-9]{2}-?[0-9]{5}"
-                          placeholder="000-00-00000"
-                          value={registration}
-                          onChange={(e) => setRegistration(e.target.value)}
-                          inputMode="numeric"
-                        />
-                        <small>10자리 사업자등록번호를 입력해 주세요.</small>
-                      </label>
-                    )}
+                        <TabsTrigger value="business" className="text-xs">
+                          <Globe2 size={15} />
+                          사업자{" "}
+                          <span className="text-muted-foreground">
+                            Business
+                          </span>
+                        </TabsTrigger>
+                        <TabsTrigger value="person" className="text-xs">
+                          <Fingerprint size={15} />
+                          자연인{" "}
+                          <span className="text-muted-foreground">
+                            Individual
+                          </span>
+                        </TabsTrigger>
+                      </TabsList>
+                      <TabsContent value={entityType}>
+                        <label>
+                          {entityType === "business" ? "사업자명" : "이름"}{" "}
+                          <span>*</span>
+                          <Input
+                            className="mt-2 h-10 text-xs"
+                            required
+                            minLength={2}
+                            maxLength={100}
+                            placeholder={
+                              entityType === "business"
+                                ? "예: Acme Labs"
+                                : "실명을 입력해 주세요"
+                            }
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            autoComplete="organization"
+                          />
+                        </label>
+                        {entityType === "business" && (
+                          <label>
+                            사업자등록번호 <span>*</span>
+                            <Input
+                              className="mt-2 h-10 text-xs"
+                              required
+                              pattern="[0-9]{3}-?[0-9]{2}-?[0-9]{5}"
+                              placeholder="000-00-00000"
+                              value={registration}
+                              onChange={(e) => setRegistration(e.target.value)}
+                              inputMode="numeric"
+                            />
+                            <small>
+                              10자리 사업자등록번호를 입력해 주세요.
+                            </small>
+                          </label>
+                        )}
+                      </TabsContent>
+                    </Tabs>
                     <div className="info-note">
                       <LockKeyhole size={14} />
                       <span>
                         해커톤 데모에서는 실제 신원 심사 없이 확인됩니다.
                       </span>
                     </div>
-                    <button
-                      className="primary full"
+                    <Button
+                      variant="default"
+                      className="h-10 text-xs w-full justify-between"
                       disabled={!!busy || !state}
                       type="submit"
                     >
                       신원 확인하기 {loading("identity")}
-                    </button>
+                    </Button>
                   </form>
                 )}
                 <div className={`scope-section ${!agent ? "inactive" : ""}`}>
@@ -489,9 +538,9 @@ export default function Home() {
                             ? "위임이 만료되었습니다"
                             : "서명된 위임 발급 완료"}
                         </strong>
-                        <Badge tone={expired ? "" : "green"}>
+                        <StatusBadge tone={expired ? "" : "green"}>
                           {expired ? "Expired" : "Active"}
-                        </Badge>
+                        </StatusBadge>
                       </div>
                       <dl>
                         <div>
@@ -534,8 +583,9 @@ export default function Home() {
                           충전 트랜잭션 확인 <ArrowUpRight size={14} />
                         </a>
                       )}
-                      <button
-                        className="secondary full"
+                      <Button
+                        variant="outline"
+                        className="h-10 text-xs w-full "
                         onClick={() =>
                           void action("copy", async () => {
                             const result = await api(
@@ -552,7 +602,7 @@ export default function Home() {
                       >
                         {copied ? <Check size={15} /> : <Copy size={15} />}{" "}
                         {copied ? "복사했습니다" : "Delegation JWT 복사"}
-                      </button>
+                      </Button>
                     </div>
                   ) : (
                     <form
@@ -583,7 +633,8 @@ export default function Home() {
                         <label>
                           1회 한도{" "}
                           <div className="unit-input">
-                            <input
+                            <Input
+                              className="mt-2 h-10 text-xs"
                               type="number"
                               min="0.000001"
                               step="0.000001"
@@ -598,7 +649,8 @@ export default function Home() {
                         <label>
                           누적 한도
                           <div className="unit-input">
-                            <input
+                            <Input
+                              className="mt-2 h-10 text-xs"
                               type="number"
                               min={perTx}
                               step="0.000001"
@@ -613,7 +665,8 @@ export default function Home() {
                       </div>
                       <label>
                         허용 Merchant 주소
-                        <input
+                        <Input
+                          className="mt-2 h-10 text-xs"
                           required
                           placeholder="0x… (여러 주소는 쉼표로 구분)"
                           value={merchant}
@@ -625,35 +678,43 @@ export default function Home() {
                         <span>위임 유효 기간</span>
                         <strong>1시간</strong>
                       </div>
-                      <button className="primary full" disabled={!!busy}>
+                      <Button
+                        variant="default"
+                        className="h-10 text-xs w-full justify-between"
+                        disabled={!!busy}
+                      >
                         {delegation
                           ? "충전 확인 및 발급 재시도"
                           : "위임 발급하기"}{" "}
                         {loading("delegation")}
-                      </button>
+                      </Button>
                     </form>
                   )}
                 </div>
-              </div>
-              <div className="card-footer">
+              </CardContent>
+              <CardFooter className="card-footer">
                 <ShieldCheck size={14} /> Principal이 확인된 후에만 위임을
                 발급할 수 있습니다.
-              </div>
-            </section>
+              </CardFooter>
+            </Card>
             <div className="right-column">
-              <section className="card" id="agent">
-                <div className="card-heading">
+              <Card role="region" className="card" id="agent">
+                <CardHeader className="card-heading">
                   <div className="heading-icon">
                     <Terminal size={19} />
                   </div>
                   <div>
-                    <h2>Agent & sandbox</h2>
-                    <p>격리된 환경, 독립된 Agent.</p>
+                    <CardTitle role="heading" aria-level={2}>
+                      Agent & sandbox
+                    </CardTitle>
+                    <CardDescription>
+                      격리된 환경, 독립된 Agent.
+                    </CardDescription>
                   </div>
-                  <Badge tone={agent ? "green" : ""}>
+                  <StatusBadge tone={agent ? "green" : ""}>
                     {agent ? "연결됨" : sandbox ? "주소 대기" : "미연결"}
-                  </Badge>
-                </div>
+                  </StatusBadge>
+                </CardHeader>
                 <div className="agent-body">
                   <div className="sandbox-visual">
                     <div className="orbit orbit-one" />
@@ -683,8 +744,9 @@ export default function Home() {
                 </div>
                 {!sandbox ? (
                   <div className="agent-action">
-                    <button
-                      className="secondary full"
+                    <Button
+                      variant="outline"
+                      className="h-10 text-xs w-full "
                       disabled={!principal || !!busy}
                       onClick={() =>
                         void action("sandbox", () => api("sandboxes", {}))
@@ -699,7 +761,7 @@ export default function Home() {
                       {busy === "sandbox" && (
                         <LoaderCircle size={14} className="spin" />
                       )}
-                    </button>
+                    </Button>
                     {!principal && (
                       <p>먼저 Principal 신원 확인을 완료해 주세요.</p>
                     )}
@@ -731,16 +793,21 @@ export default function Home() {
                       >
                         <label>
                           데모 Agent 주소
-                          <input
+                          <Input
+                            className="mt-2 h-10 text-xs"
                             required
                             placeholder="0x…"
                             value={agentAddress}
                             onChange={(e) => setAgentAddress(e.target.value)}
                           />
                         </label>
-                        <button className="secondary" disabled={!!busy}>
+                        <Button
+                          variant="outline"
+                          className="h-10 text-xs  "
+                          disabled={!!busy}
+                        >
                           주소 연결 {loading("register")}
-                        </button>
+                        </Button>
                       </form>
                     )}
                   </div>
@@ -777,19 +844,23 @@ export default function Home() {
                     )}
                   </div>
                 </div>
-              </section>
-              <section className="card" id="ledger">
-                <div className="card-heading">
+              </Card>
+              <Card role="region" className="card" id="ledger">
+                <CardHeader className="card-heading">
                   <div className="heading-icon">
                     <Wallet size={19} />
                   </div>
                   <div>
-                    <h2>Spend ledger</h2>
-                    <p>위임 범위 안에서, 투명하게.</p>
+                    <CardTitle role="heading" aria-level={2}>
+                      Spend ledger
+                    </CardTitle>
+                    <CardDescription>
+                      위임 범위 안에서, 투명하게.
+                    </CardDescription>
                   </div>
                   <span className="subtle-tag">USDC</span>
-                </div>
-                <div className="ledger-body">
+                </CardHeader>
+                <CardContent className="ledger-body">
                   <div className="ledger-value">
                     <strong>
                       {spent !== null ? money(spent) : "—"}
@@ -808,16 +879,11 @@ export default function Home() {
                         : `${progress.toFixed(0)}% 사용`}
                     </span>
                   </div>
-                  <div
-                    className="meter"
-                    role="progressbar"
+                  <Progress
+                    className="h-2 bg-muted"
+                    value={spent === null ? null : progress}
                     aria-label="누적 지출"
-                    aria-valuenow={progress}
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                  >
-                    <div style={{ width: `${progress}%` }} />
-                  </div>
+                  />
                   <div className="ledger-legend">
                     <span>
                       <i /> 누적 정산 금액
@@ -847,22 +913,26 @@ export default function Home() {
                       </strong>
                     </div>
                   </div>
-                </div>
-              </section>
+                </CardContent>
+              </Card>
             </div>
-            <section className="card decisions-card" id="decisions">
-              <div className="card-heading">
+            <Card role="region" className="card decisions-card" id="decisions">
+              <CardHeader className="card-heading">
                 <div className="heading-icon">
                   <ShieldCheck size={20} />
                 </div>
                 <div>
-                  <h2>Verifier decisions</h2>
-                  <p>돈이 움직이기 직전, 모든 결제의 위임을 확인합니다.</p>
+                  <CardTitle role="heading" aria-level={2}>
+                    Verifier decisions
+                  </CardTitle>
+                  <CardDescription>
+                    돈이 움직이기 직전, 모든 결제의 위임을 확인합니다.
+                  </CardDescription>
                 </div>
-                <Badge tone={verifier ? "green" : ""}>
+                <StatusBadge tone={verifier ? "green" : ""}>
                   {verifier ? "Live" : "연결 대기"}
-                </Badge>
-              </div>
+                </StatusBadge>
+              </CardHeader>
               {relevant.length ? (
                 <div className="decision-list">
                   {[...relevant].reverse().map((d, i) => (
@@ -889,9 +959,11 @@ export default function Home() {
                       <strong className="decision-amount">
                         {money(d.amount)} <small>USDC</small>
                       </strong>
-                      <Badge tone={d.decision === "approved" ? "green" : "red"}>
+                      <StatusBadge
+                        tone={d.decision === "approved" ? "green" : "red"}
+                      >
                         {d.decision === "approved" ? "승인" : "거절"}
-                      </Badge>
+                      </StatusBadge>
                       <time>{new Date(d.at).toLocaleTimeString("ko-KR")}</time>
                     </div>
                   ))}
@@ -925,7 +997,7 @@ export default function Home() {
                   </div>
                 </div>
               )}
-            </section>
+            </Card>
           </div>
           <footer className="page-footer">
             <span>
