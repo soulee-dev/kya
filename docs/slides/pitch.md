@@ -100,6 +100,22 @@ layout: center
 -->
 
 ---
+layout: center
+---
+
+# 이게 실제 화면이다 — Maison KYA
+
+<div class="flex justify-center mt-4">
+  <img src="./assets/shot-hero.jpg" class="rounded-2xl shadow-xl" style="max-height:62vh" alt="Maison KYA 스토어프론트" />
+</div>
+
+<div class="text-center text-sm opacity-70 mt-3">글래스모피즘 · 인스타 DM 감성 채팅 · 실시간 쇼핑백 — 실제 동작하는 웹 프로덕트</div>
+
+<!--
+실물 화면 공개. "목업이 아니라 실제로 도는 웹앱입니다." (10초)
+-->
+
+---
 
 # 라이브 데모 · 씬 1 — 원하는 걸 사 온다
 
@@ -120,17 +136,13 @@ layout: center
 
 </div>
 
-<div class="text-sm rounded-xl p-4 mt-2" style="background:#2a211b;color:#f6efe4;font-family:monospace">
-🔍 "트위드 자켓" 검색 중…<br>
-🔍 8개 후보 발견<br>
-💛 Maison Pick · 수아레 프렌치 울 트위드 블레이저<br>
-&nbsp;&nbsp;&nbsp;₩109,900 · 1.10 USDC<br>
-🧾 체크아웃 co_8aad… 생성<br>
-🛡️ 결제 서명 → Verifier 검사<br>
-<span style="color:#8fbf86">✅ Approved · 정산 완료 · tx 0x…</span>
+<div>
+  <img src="./assets/shot-recommend.jpg" class="rounded-xl shadow-lg" style="max-height:52vh" alt="추천 카드와 쇼핑백" />
 </div>
 
 </div>
+
+<div class="text-xs opacity-60 mt-2">에이전트가 고른 상품이 추천 카드로 뜨고, 오른쪽 쇼핑백에 담긴다.</div>
 
 <!--
 씬1 시연. 채팅 치고 결과가 흐르는 걸 보여준다. "말 한마디에 검색-비교-추천-결제가 다 돕니다." (30초)
@@ -157,19 +169,14 @@ layout: center
 
 </div>
 
-<div class="text-sm rounded-xl p-4 mt-2" style="background:#2a211b;color:#f6efe4;font-family:monospace">
-💛 Maison Pick · 까이에 실크 원피스 ₩800,000 · 8.00 USDC<br>
-🛡️ 결제 서명 → Verifier 검사<br>
-<span style="color:#e08a80">❌ Declined · kya:per_tx_limit_exceeded</span><br>
-💛 대안: 미카도 실크 미디 드레스 ₩400,000 · 4.00 USDC<br>
-🛡️ 결제 서명 → Verifier 검사<br>
-<span style="color:#8fbf86">✅ Approved · 정산 완료</span>
+<div>
+  <img src="./assets/shot-decision.jpg" class="rounded-xl shadow-lg" style="max-height:52vh" alt="한도 초과 거절 판정 카드와 Paid·Declined 스탬프" />
 </div>
 
 </div>
 
-<div v-click class="mt-4 text-center text-xl" style="font-family:Cormorant Garamond,serif;color:#8c6d3f">
-위임 한도는 장식이 아니다 — 실제로 돈을 막고, 에이전트는 그 안에서 다시 최선을 찾는다.
+<div v-click class="mt-2 text-center text-lg" style="font-family:Cormorant Garamond,serif;color:#8c6d3f">
+위임 한도는 장식이 아니다 — 실제로 돈을 막고(❌ Declined), 에이전트는 그 안에서 다시 최선을 찾는다.
 </div>
 
 <!--
@@ -246,29 +253,32 @@ layout: center
 
 # 스폰서 · Daytona가 심장이다
 
-<div class="grid grid-cols-2 gap-10 mt-6 text-left max-w-3xl mx-auto">
+<div class="text-center text-base opacity-75 mb-5">구매 에이전트를 <b>샌드박스로 격리</b>하고, 에이전트마다 <b>구매 한도를 나눠 준다</b>.</div>
 
-<div>
+<div class="grid grid-cols-3 gap-5 text-left max-w-5xl mx-auto text-sm">
 
-### 왜 Daytona인가
+<div class="p-4 rounded-xl" style="background:rgba(255,255,255,.5);border:1px solid #e3d6c2">
+<b>① 격리 = 신뢰의 전제</b><br>
+<span style="color:#6a5d51">지갑 키가 새면 위임 자체가 무의미. 키는 <b>샌드박스 안에서 태어나 밖으로 안 나간다</b> → 키 유출 0.</span>
+</div>
 
-에이전트에게 **격리된 몸**이 필요하다. 지갑 키가 새면 위임이 무의미해진다.
+<div class="p-4 rounded-xl" style="background:rgba(255,255,255,.5);border:1px solid #e3d6c2">
+<b>② 에이전트 1 = 샌드박스 1</b><br>
+<span style="color:#6a5d51">구매 에이전트마다 자기 샌드박스·자기 지갑. 에이전트가 폭주해도 <b>그 샌드박스 안에</b> 갇힌다.</span>
+</div>
+
+<div class="p-4 rounded-xl" style="background:rgba(255,255,255,.5);border:1px solid #e3d6c2">
+<b>③ 한도를 나눠 준다</b><br>
+<span style="color:#6a5d51">Principal이 <b>샌드박스별로</b> 다른 Scope(1회·누적 한도, 허용 상점)를 발급. "이 에이전트는 50만원까지, 저 에이전트는 명품관만".</span>
+</div>
 
 </div>
 
-<div>
-
-### 어떻게 썼나
-
-- 채팅 세션마다 샌드박스를 띄우고 러너를 업로드·실행
-- 키는 샌드박스 내부에서만 존재 → **키 유출 = 0**
-- `@daytona/sdk` create · uploadFiles · executeCommand · preview
-
+<div class="text-center text-xs opacity-70 mt-4">
+`@daytona/sdk` — create · uploadFiles(러너) · executeCommand · envVars(위임·한도 주입) · preview
 </div>
 
-</div>
-
-<div class="mt-10 text-xl text-center" style="font-family:Cormorant Garamond,serif;color:#8c6d3f">
+<div class="mt-6 text-xl text-center" style="font-family:Cormorant Garamond,serif;color:#8c6d3f">
 "에이전트의 몸은 Daytona, 에이전트의 규칙은 KYA."
 </div>
 
