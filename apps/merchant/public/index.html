@@ -2,195 +2,220 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>GIRLSPICK — 친구가 골라준다</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Maison KYA — Personal Shopper</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Black+Han+Sans&display=swap" rel="stylesheet" />
-<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" rel="stylesheet" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {
     theme: {
       extend: {
         colors: {
-          ink: "#0B0B0D", coal: "#141417", smoke: "#1D1D22", ash: "#2A2A31", fog: "#8B8B96", chalk: "#F4F2F5",
-          hot: "#FF2E88", hotdeep: "#E0146F", blush: "#FFB8D6",
-          ok: "#3DF59B", bad: "#FF3D5A",
+          ink: "#2a211b",        // warm espresso — primary text
+          inksoft: "#6a5d51",    // muted body
+          fog: "#9a8c7d",        // faint captions
+          cream: "#f6efe4",      // paper
+          gold: "#b08d57",       // champagne accent
+          golddeep: "#8c6d3f",
+          blush: "#cf9a90",      // feminine secondary
+          sage: "#6f8a63",       // approved
+          terra: "#b0574c",      // denied
+          line: "rgba(42,33,27,.14)",
         },
         fontFamily: {
-          anton: ["Anton", "Impact", "sans-serif"],
-          han: ['"Black Han Sans"', "Anton", "sans-serif"],
-          sans: ['"Pretendard Variable"', "Pretendard", "-apple-system", "system-ui", "sans-serif"],
+          serif: ['"Cormorant Garamond"', "serif"],
+          sans: ['"Jost"', "ui-sans-serif", "system-ui", "sans-serif"],
         },
       },
     },
   };
 </script>
 <style>
-  :root { color-scheme: dark; }
+  :root { color-scheme: light; }
   html, body { height: 100%; }
-  body { background: #0B0B0D; }
-  .grain { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
-  .scroll-thin { scrollbar-width: thin; scrollbar-color: #2A2A31 transparent; }
-  .scroll-thin::-webkit-scrollbar { width: 6px; } .scroll-thin::-webkit-scrollbar-thumb { background: #2A2A31; border-radius: 999px; }
-  .no-scrollbar::-webkit-scrollbar { display: none; } .no-scrollbar { scrollbar-width: none; }
-  .marquee { animation: marquee 28s linear infinite; }
-  @keyframes marquee { to { transform: translateX(-50%); } }
-
-  .bubble-in { animation: bubble-in .25s cubic-bezier(.2,.8,.2,1) both; }
-  @keyframes bubble-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-  .typing i { display: inline-block; width: 6px; height: 6px; border-radius: 999px; background: #8B8B96; margin: 0 2px; animation: typing 1.2s infinite ease-in-out; }
-  .typing i:nth-child(2) { animation-delay: .15s; } .typing i:nth-child(3) { animation-delay: .3s; }
-  @keyframes typing { 0%, 60%, 100% { transform: translateY(0); opacity: .4; } 30% { transform: translateY(-4px); opacity: 1; } }
-
-  /* bag */
-  .bag-item { z-index: var(--z, 10); animation: drop .7s cubic-bezier(.34,1.56,.64,1) both; will-change: transform; }
-  @keyframes drop {
-    0%   { opacity: 0; transform: translate(-50%, -300px) rotate(var(--r, 0deg)) scale(.6); }
-    55%  { opacity: 1; transform: translate(-50%, 10px) rotate(var(--r, 0deg)) scale(1.04); }
-    100% { opacity: 1; transform: translate(-50%, 0) rotate(var(--r, 0deg)) scale(1); }
+  body {
+    font-family: "Jost", ui-sans-serif, system-ui, sans-serif;
+    color: #2a211b;
+    background: #ded4c6;
   }
-  .bag-bump { animation: bump .5s cubic-bezier(.34,1.56,.64,1); }
-  @keyframes bump { 0% { transform: scale(1); } 35% { transform: scale(1.03) translateY(4px); } 100% { transform: scale(1); } }
-  .tip { opacity: 0; visibility: hidden; transform: translate(-50%, 8px) rotate(calc(-1 * var(--r, 0deg))); transition: opacity .16s ease, transform .16s ease, visibility 0s linear .16s; }
-  .bag-item:hover .tip, .bag-item:focus-within .tip, .tip:hover { opacity: 1; visibility: visible; transform: translate(-50%, 0) rotate(calc(-1 * var(--r, 0deg))); transition-delay: 0s; }
-  .bag-item:hover, .bag-item:focus-within { z-index: 40; }
-  .ring-pay { animation: ring-pay 1.1s ease-in-out infinite; }
-  @keyframes ring-pay { 0%, 100% { box-shadow: 0 0 0 0 rgba(11,11,13,.7); } 50% { box-shadow: 0 0 0 8px rgba(11,11,13,0); } }
-  .shine { background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.55) 50%, transparent 70%); background-size: 200% 100%; animation: shine 1.8s linear infinite; }
-  @keyframes shine { to { background-position: -200% 0; } }
-  .stamp { animation: stamp .45s cubic-bezier(.34,1.56,.64,1) both; }
-  @keyframes stamp { 0% { transform: scale(2) rotate(-12deg); opacity: 0; } 100% { transform: scale(1) rotate(-8deg); opacity: 1; } }
-
-  @media (prefers-reduced-motion: reduce) {
-    .bubble-in, .bag-item, .bag-bump, .typing i, .ring-pay, .shine, .stamp, .marquee { animation: none !important; }
-    .tip { transition: none; }
+  /* blurred warm hero photo behind everything */
+  .backdrop {
+    position: fixed; inset: 0; z-index: -2;
+    background: url("assets/bg.jpg") center 30% / cover no-repeat;
+    filter: blur(18px) saturate(1.1) brightness(1.02);
+    transform: scale(1.12);
   }
+  .backdrop-scrim {
+    position: fixed; inset: 0; z-index: -1;
+    background:
+      radial-gradient(120% 80% at 50% 0%, rgba(246,239,228,.35), transparent 60%),
+      linear-gradient(180deg, rgba(246,239,228,.5) 0%, rgba(228,214,198,.6) 55%, rgba(214,198,178,.7) 100%);
+  }
+  .glass {
+    background: rgba(252,248,241,.58);
+    backdrop-filter: blur(26px) saturate(1.3);
+    -webkit-backdrop-filter: blur(26px) saturate(1.3);
+    border: 1px solid rgba(255,255,255,.55);
+    box-shadow: 0 24px 70px -30px rgba(58,42,28,.55), inset 0 1px 0 rgba(255,255,255,.6);
+  }
+  .glass-soft {
+    background: rgba(255,252,247,.5);
+    backdrop-filter: blur(16px) saturate(1.2);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    border: 1px solid rgba(255,255,255,.5);
+  }
+  .hairline { border-color: rgba(42,33,27,.12); }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+  /* message entrance */
+  .bubble-in { animation: rise .5s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+  /* IG-DM typing dots */
+  .typing { display: inline-flex; gap: 4px; align-items: center; }
+  .typing i { width: 6px; height: 6px; border-radius: 999px; background: #b08d57; opacity: .5; animation: blink 1.3s infinite both; }
+  .typing i:nth-child(2) { animation-delay: .2s; }
+  .typing i:nth-child(3) { animation-delay: .4s; }
+  @keyframes blink { 0%,60%,100% { opacity: .3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-3px); } }
+
+  /* IG gradient ring for avatar + send */
+  .ig-ring { background: linear-gradient(135deg, #d9a7b0 0%, #c99f86 40%, #b08d57 100%); }
+
+  /* bag tiles */
+  .bag-item { transition: transform .45s cubic-bezier(.2,.9,.2,1); animation: drop .55s cubic-bezier(.2,.9,.2,1) both; }
+  @keyframes drop { from { opacity: 0; transform: translate(-50%, -28px) rotate(var(--r)); } to { opacity: 1; transform: translate(-50%, 0) rotate(var(--r)); } }
+  .bag-item:hover, .bag-item:focus-visible { z-index: 60 !important; outline: none; }
+  .bag-item:hover .tile, .bag-item:focus-visible .tile { transform: translateY(-6px) scale(1.04); box-shadow: 0 20px 34px -14px rgba(58,42,28,.6); }
+  .bag-item .tip { opacity: 0; transform: translate(-50%, 8px) scale(.96); pointer-events: none; transition: all .22s ease; transform-origin: bottom center; }
+  .bag-item:hover .tip, .bag-item:focus-visible .tip { opacity: 1; transform: translate(-50%, 0) scale(1); pointer-events: auto; }
+  .tile { transition: transform .3s ease, box-shadow .3s ease; box-shadow: 0 12px 24px -14px rgba(58,42,28,.5); }
+  .ring-pay .tile { box-shadow: 0 0 0 2px #b08d57, 0 12px 28px -12px rgba(176,141,87,.7); }
+  .shine { background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.6) 50%, transparent 70%); background-size: 260% 100%; animation: shine 1.25s linear infinite; }
+  @keyframes shine { from { background-position: 160% 0; } to { background-position: -60% 0; } }
+  .stamp { animation: stampin .35s cubic-bezier(.2,1.4,.4,1) both; }
+  @keyframes stampin { from { opacity: 0; transform: scale(1.5) rotate(-10deg); } to { opacity: 1; transform: scale(1) rotate(-8deg); } }
+  .bag-bump { animation: bump .4s ease; }
+  @keyframes bump { 30% { transform: scale(1.04); } }
 </style>
 </head>
-<body class="font-sans text-chalk antialiased overflow-hidden">
+<body class="min-h-screen">
+<div class="backdrop"></div>
+<div class="backdrop-scrim"></div>
 
-<!-- ── top bar ─────────────────────────────────────────────── -->
-<header class="h-16 px-5 md:px-8 flex items-center justify-between border-b border-ash relative z-30 bg-ink">
-  <div class="flex items-center gap-4">
-    <span class="font-anton text-[30px] leading-none tracking-wide uppercase">GIRLS<span class="text-hot">PICK</span></span>
-    <span class="hidden md:inline font-han text-[15px] text-fog tracking-wide">친구가 진짜 골라준다</span>
+<!-- top bar -->
+<header class="relative z-10 flex items-center justify-between px-5 sm:px-8 h-16">
+  <div class="flex items-baseline gap-2.5 select-none">
+    <span class="font-serif italic text-2xl sm:text-[26px] tracking-tight text-ink">Maison</span>
+    <span class="font-serif text-2xl sm:text-[26px] font-semibold tracking-[.22em] text-gold">KYA</span>
+    <span class="hidden sm:inline text-[10px] uppercase tracking-[.4em] text-inksoft ml-1 mt-1">Women's Edit</span>
   </div>
-  <div class="flex items-center gap-2 h-8 px-3 border border-ash text-[11px] font-semibold uppercase tracking-[.18em] text-fog">
-    <span id="agent-dot" class="w-1.5 h-1.5 rounded-full bg-fog"></span>
-    <span id="agent-status">CONNECTING</span>
+  <div class="flex items-center gap-2 text-[11px] uppercase tracking-[.22em] text-inksoft">
+    <span id="agent-dot" class="w-1.5 h-1.5 rounded-full bg-sage"></span>
+    <span id="agent-status">Concierge online</span>
   </div>
 </header>
 
 <!-- mobile tabs -->
-<nav class="md:hidden h-11 flex border-b border-ash bg-ink text-xs font-bold uppercase tracking-[.16em] relative z-30" aria-label="화면 전환">
-  <button data-tab="chat" class="tab flex-1 bg-chalk text-ink cursor-pointer transition-colors">DM</button>
-  <button data-tab="bag" class="tab flex-1 text-chalk cursor-pointer transition-colors">BAG <span id="bag-count-tab" class="ml-1 inline-flex min-w-[18px] h-[18px] px-1 items-center justify-center bg-hot text-ink text-[11px]">0</span></button>
-</nav>
+<div class="lg:hidden relative z-10 px-5 flex gap-2 mb-3">
+  <button data-tab="chat" class="tab flex-1 h-9 rounded-full text-xs uppercase tracking-[.2em] glass-soft text-ink">Chat</button>
+  <button data-tab="bag" class="tab flex-1 h-9 rounded-full text-xs uppercase tracking-[.2em] text-inksoft glass-soft">Shopping Bag <span id="bag-count-tab" class="ml-1">0</span></button>
+</div>
 
-<main class="grid md:grid-cols-2 h-[calc(100dvh-4rem-2.75rem)] md:h-[calc(100dvh-4rem)]">
+<main class="relative z-10 px-4 sm:px-8 pb-6 mx-auto max-w-[1360px] grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] gap-5 lg:gap-7">
 
-  <!-- ── LEFT · DM (dark) ─────────────────────────────────────── -->
-  <section id="pane-chat" class="flex flex-col min-h-0 bg-ink md:border-r border-ash">
-    <div class="h-[72px] px-5 flex items-center gap-3 border-b border-ash">
-      <div class="relative">
-        <div class="w-11 h-11 rounded-full p-[2px] bg-gradient-to-tr from-hot via-hot to-blush">
-          <div class="w-full h-full rounded-full bg-ink flex items-center justify-center font-anton text-hot text-xl leading-none">R</div>
-        </div>
-        <span class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-ok border-2 border-ink"></span>
+  <!-- ═══════════ CHAT — glassmorphism · instagram DM ═══════════ -->
+  <section id="pane-chat" class="glass rounded-[30px] overflow-hidden flex flex-col h-[calc(100vh-118px)] lg:h-[calc(100vh-104px)]">
+    <div class="flex items-center gap-3 px-5 py-4 border-b hairline">
+      <div class="ig-ring p-[2px] rounded-full">
+        <div class="w-11 h-11 rounded-full bg-cream flex items-center justify-center font-serif text-xl text-gold">M</div>
       </div>
-      <div class="min-w-0">
-        <div class="font-semibold text-[15px] leading-tight">루비 <span class="text-fog font-normal text-xs ml-1">@ruby.picks</span></div>
-        <div class="text-xs text-fog leading-tight mt-0.5">지금 활동 중 · 네가 준 한도 안에서만 긁어</div>
+      <div class="leading-tight">
+        <div class="font-serif text-xl text-ink">Maison Concierge</div>
+        <div class="text-[11px] text-inksoft tracking-wide">위임 범위 안에서만 결제해요 · 활성</div>
       </div>
-      <button id="btn-reset" class="ml-auto w-10 h-10 flex items-center justify-center text-fog hover:text-chalk hover:bg-smoke transition-colors cursor-pointer" aria-label="대화 새로 시작" title="대화 새로 시작">
-        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+      <button id="btn-reset" title="대화 새로 시작" class="ml-auto w-9 h-9 rounded-full grid place-items-center text-inksoft hover:text-ink hover:bg-white/50 transition-colors">
+        <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
       </button>
     </div>
 
-    <div id="messages" class="flex-1 min-h-0 overflow-y-auto scroll-thin px-4 md:px-5 py-5 space-y-2.5" aria-live="polite"></div>
+    <div id="messages" class="flex-1 overflow-y-auto no-scrollbar px-4 sm:px-5 py-5 space-y-3"></div>
 
-    <div class="px-4 md:px-5 pb-4 pt-2 border-t border-ash">
-      <div id="chips" class="flex gap-2 overflow-x-auto no-scrollbar pb-2.5 -mx-1 px-1"></div>
+    <div class="px-4 sm:px-5 pt-2 pb-4 border-t hairline">
+      <div id="chips" class="flex gap-2 overflow-x-auto no-scrollbar pb-2.5"></div>
       <form id="composer" class="flex items-end gap-2">
-        <label for="input" class="sr-only">메시지</label>
-        <div class="flex-1 flex items-end rounded-full border border-ash bg-coal focus-within:border-hot transition-colors">
-          <textarea id="input" rows="1" placeholder="메시지 보내기…" class="flex-1 max-h-32 resize-none bg-transparent px-4 py-2.5 text-[15px] leading-6 outline-none placeholder:text-fog"></textarea>
+        <div class="flex-1 glass-soft rounded-[22px] px-4 py-2.5 flex items-center">
+          <textarea id="input" rows="1" placeholder="메시지 보내기…" class="w-full bg-transparent resize-none outline-none text-[15px] leading-6 text-ink placeholder:text-fog max-h-32"></textarea>
         </div>
-        <button id="btn-send" type="submit" class="w-11 h-11 rounded-full bg-hot text-ink flex items-center justify-center hover:bg-hotdeep disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer" aria-label="보내기">
-          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 14-7-7 14v-7z"/></svg>
+        <button id="btn-send" type="submit" title="보내기" class="ig-ring w-11 h-11 shrink-0 rounded-full grid place-items-center text-white shadow-lg disabled:opacity-40 transition-opacity">
+          <svg class="w-[19px] h-[19px] -ml-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
         </button>
       </form>
     </div>
   </section>
 
-  <!-- ── RIGHT · BAG (hot pink block) ─────────────────────────── -->
-  <section id="pane-bag" class="hidden md:flex flex-col min-h-0 bg-hot text-ink relative overflow-hidden grain">
-    <!-- marquee strip -->
-    <div class="h-8 border-b-2 border-ink overflow-hidden whitespace-nowrap flex items-center">
-      <div class="marquee inline-block font-anton uppercase tracking-[.12em] text-[13px]">
-        <span class="px-6">PICKED BY YOUR BESTIE</span><span class="px-6">·</span><span class="px-6">KYA VERIFIED</span><span class="px-6">·</span><span class="px-6">NO CAP, NO OVERSPEND</span><span class="px-6">·</span>
-        <span class="px-6">PICKED BY YOUR BESTIE</span><span class="px-6">·</span><span class="px-6">KYA VERIFIED</span><span class="px-6">·</span><span class="px-6">NO CAP, NO OVERSPEND</span><span class="px-6">·</span>
-      </div>
-    </div>
-
-    <div class="px-6 md:px-8 pt-5 flex items-end justify-between">
+  <!-- ═══════════ SHOPPING BAG ═══════════ -->
+  <section id="pane-bag" class="hidden lg:flex glass rounded-[30px] overflow-hidden flex-col h-[calc(100vh-118px)] lg:h-[calc(100vh-104px)]">
+    <div class="flex items-end justify-between px-6 pt-6 pb-4 border-b hairline">
       <div>
-        <div class="font-anton uppercase text-[64px] md:text-[76px] leading-[.86] tracking-tight">THE<br/>BAG</div>
-        <div class="font-han text-lg mt-2 leading-tight">루비가 골라 넣은 것들</div>
+        <div class="text-[10px] uppercase tracking-[.34em] text-gold mb-1">Your selection</div>
+        <h2 class="font-serif text-[30px] leading-none text-ink">Shopping Bag</h2>
       </div>
-      <span id="bag-count" class="font-anton text-[44px] leading-none"><b class="font-anton">0</b><span class="text-[16px] tracking-[.2em] ml-1 align-top">ITEMS</span></span>
+      <div id="bag-count" class="font-serif text-3xl text-ink leading-none"></div>
     </div>
 
-    <!-- stage -->
-    <div class="flex-1 min-h-0 relative flex items-center justify-center px-6">
-      <div id="bag" class="relative w-full max-w-[440px] aspect-[4/3.2]">
-        <svg class="absolute inset-0 w-full h-full" viewBox="0 0 440 352" fill="none" aria-hidden="true">
-          <!-- handles -->
-          <path d="M150 112 C150 46 290 46 290 112" stroke="#0B0B0D" stroke-width="12" stroke-linecap="round"/>
-          <!-- body back -->
-          <path d="M84 108 H356 L334 318 C333 328 325 336 315 336 H125 C115 336 107 328 106 318 Z" fill="#FF8BBB" stroke="#0B0B0D" stroke-width="5"/>
+    <!-- stage: items nestle into an elegant paper bag -->
+    <div class="relative flex-1 overflow-hidden">
+      <div id="bag-empty" class="absolute inset-0 flex flex-col items-center justify-center gap-4 px-8 text-center">
+        <svg class="w-28 h-28 text-gold/55" viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-width="1.4">
+          <path d="M24 34h48l-4 50a4 4 0 0 1-4 3.6H32a4 4 0 0 1-4-3.6L24 34Z" fill="rgba(255,255,255,.28)"/>
+          <path d="M36 34v-4a12 12 0 0 1 24 0v4" stroke-linecap="round"/>
+          <path d="M40 46c0 5 3.6 8 8 8s8-3 8-8" stroke-linecap="round" opacity=".6"/>
         </svg>
-        <div id="bag-items" class="absolute inset-0"></div>
-        <!-- front face over items -->
-        <svg class="absolute inset-0 w-full h-full pointer-events-none" style="z-index:20" viewBox="0 0 440 352" fill="none" aria-hidden="true">
-          <path d="M84 108 H356 L334 318 C333 328 325 336 315 336 H125 C115 336 107 328 106 318 Z" fill="#FF2E88" fill-opacity=".28" stroke="#0B0B0D" stroke-width="5"/>
-          <text x="220" y="94" text-anchor="middle" font-family="Anton, Impact, sans-serif" font-size="22" letter-spacing="4" fill="#0B0B0D">GIRLSPICK</text>
-        </svg>
-        <div id="bag-empty" class="absolute inset-x-0 top-[44%] text-center px-14" style="z-index:21">
-          <div class="font-han text-2xl">아직 비었음</div>
-          <div class="text-xs font-semibold mt-1 opacity-80">루비한테 뭐 찾는지 던져. 찾으면 여기로 넣어줌.</div>
-        </div>
+        <p class="font-serif italic text-xl text-inksoft">아직 비어 있어요</p>
+        <p class="text-[13px] text-fog max-w-[16rem] leading-relaxed">채팅으로 원하는 아이템을 말해 주세요. 컨시어지가 상점에서 골라 이 백에 담아 드릴게요.</p>
       </div>
+
+      <!-- paper-bag silhouette backdrop -->
+      <svg id="bag-stage-bg" class="hidden absolute left-1/2 bottom-0 -translate-x-1/2 w-[86%] max-w-[440px] pointer-events-none" viewBox="0 0 440 300" fill="none" aria-hidden="true">
+        <path d="M40 96 L400 96 L384 286 a10 10 0 0 1-10 9 H76 a10 10 0 0 1-10-9 Z" fill="rgba(255,252,247,.42)" stroke="rgba(176,141,87,.5)" stroke-width="1.5"/>
+        <path d="M40 96 L66 60 H374 L400 96" fill="rgba(255,252,247,.30)" stroke="rgba(176,141,87,.45)" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M150 96 c0-40 20-58 70-58 s70 18 70 58" fill="none" stroke="rgba(176,141,87,.55)" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+
+      <div id="bag-items" class="absolute inset-0"></div>
     </div>
 
-    <!-- totals + pay -->
-    <div class="px-6 md:px-8 pb-6 pt-2">
-      <div class="flex items-end justify-between border-t-2 border-ink pt-3">
+    <!-- checkout footer -->
+    <div class="px-6 pt-4 pb-6 border-t hairline glass-soft">
+      <div class="flex items-end justify-between mb-3">
         <div>
-          <div class="text-[11px] font-bold uppercase tracking-[.2em]">TOTAL</div>
-          <div id="total-usdc" class="text-xs font-semibold opacity-80 mt-0.5">0.00 USDC · Base Sepolia</div>
+          <div class="text-[10px] uppercase tracking-[.28em] text-inksoft mb-1">합계</div>
+          <div id="total-usdc" class="text-[11px] text-fog">0.00 USDC · Base Sepolia</div>
         </div>
-        <span class="font-anton text-[40px] leading-none tracking-tight"><span id="total-krw">₩0</span></span>
+        <div id="total-krw" class="font-serif text-[32px] leading-none text-ink">₩0</div>
       </div>
-      <button id="btn-pay" disabled class="mt-4 w-full h-14 bg-ink text-chalk font-han text-[22px] flex items-center justify-center gap-3 hover:bg-coal disabled:bg-ink/15 disabled:text-ink/50 disabled:cursor-not-allowed transition-colors cursor-pointer">
-        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-        <span id="btn-pay-label">루비한테 결제 시키기</span>
+      <button id="btn-pay" class="w-full h-[52px] rounded-2xl bg-ink text-cream font-medium tracking-[.06em] flex items-center justify-center gap-2 disabled:opacity-45 disabled:cursor-not-allowed hover:bg-golddeep transition-colors">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span id="btn-pay-label">컨시어지에게 결제 맡기기</span>
       </button>
-      <p class="text-[11px] font-semibold text-center mt-2.5 opacity-80">결제 직전, KYA Verifier가 네가 준 한도(1회·누적)를 검사함.</p>
+      <p class="text-center text-[11px] text-fog mt-2.5">결제 직전 <span class="text-golddeep">KYA Verifier</span>가 위임 범위(1회·누적 한도)를 검사해요.</p>
     </div>
   </section>
 </main>
 
 <script>
 (() => {
-  // ── data ────────────────────────────────────────────────────────────────
+  // ── data / helpers ────────────────────────────────────────────────────────
   const REASON_KO = {
     "kya:per_tx_limit_exceeded": "1회 한도 초과",
     "kya:cumulative_limit_exceeded": "누적 한도 초과",
     "kya:missing_delegation": "위임 없음",
-    "kya:invalid_delegation": "위임 만료/위조",
-    "kya:merchant_not_allowed": "허용 안 된 상점",
+    "kya:invalid_delegation": "위임 만료·위조",
+    "kya:merchant_not_allowed": "허용되지 않은 상점",
     "kya:subject_mismatch": "에이전트 불일치",
   };
   const ko = (r) => REASON_KO[r] ?? (r || "이유 불명");
@@ -204,144 +229,133 @@
   ];
   const CART_HINT = "\n(결제는 하지 말고 장바구니에 담아만 줘. 결제는 내가 따로 시킬게.)";
 
-  const state = {
-    bag: [],               // { product, status: 'idle'|'paying'|'paid'|'denied', reason?, tx?, checkoutId?, node }
-    busy: false,
-    mode: "shop",
-    checkoutToProduct: {}, // checkoutId -> productId
-    currentCheckout: null,
-  };
+  const state = { bag: [], busy: false, mode: "shop", checkoutToProduct: {}, currentCheckout: null };
 
   const $ = (s) => document.querySelector(s);
   const el = (html) => { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstElementChild; };
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const time = (iso) => new Date(iso ?? Date.now()).toLocaleTimeString("ko-KR", { hour: "numeric", minute: "2-digit" });
 
-  // ── icons (Lucide) ──────────────────────────────────────────────────────
   const I = {
-    shield: `<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
-    search: `<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>`,
-    bag: `<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`,
-    check: `<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>`,
-    x: `<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>`,
-    ext: `<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>`,
+    shield: `<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+    search: `<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>`,
+    bag: `<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`,
+    check: `<svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>`,
+    x: `<svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>`,
+    ext: `<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>`,
   };
-  const avatar = `<div class="w-7 h-7 shrink-0 rounded-full bg-hot text-ink font-anton text-sm flex items-center justify-center">R</div>`;
+  const avatar = `<div class="ig-ring p-[1.5px] rounded-full shrink-0 self-end"><div class="w-7 h-7 rounded-full bg-cream grid place-items-center font-serif text-sm text-gold">M</div></div>`;
 
-  // ── chat rendering ──────────────────────────────────────────────────────
+  // ── chat rendering (glassmorphism · IG DM) ────────────────────────────────
   const messages = $("#messages");
   const scrollDown = () => { messages.scrollTop = messages.scrollHeight; };
   const add = (node) => { messages.appendChild(node); scrollDown(); return node; };
 
   const userBubble = (text) => add(el(`
     <div class="bubble-in flex justify-end">
-      <div class="max-w-[78%] rounded-[20px] rounded-br-md bg-hot text-ink font-medium px-4 py-2.5 text-[15px] leading-6 whitespace-pre-wrap">${esc(text)}</div>
+      <div class="max-w-[80%] rounded-[22px] rounded-br-md px-4 py-2.5 text-[15px] leading-6 whitespace-pre-wrap text-white shadow-md" style="background:linear-gradient(135deg,#c99f86,#b08d57)">${esc(text)}</div>
     </div>`));
 
   const agentWrap = (inner) => add(el(`<div class="bubble-in flex items-end gap-2">${avatar}${inner}</div>`));
 
   const agentBubble = (text, tone = "") => agentWrap(`
-    <div class="max-w-[78%] rounded-[20px] rounded-bl-md px-4 py-2.5 text-[15px] leading-6 whitespace-pre-wrap
-      ${tone === "error" ? "bg-bad/15 text-bad border border-bad/40" : "bg-smoke text-chalk"}">${esc(text)}</div>`);
+    <div class="max-w-[80%] rounded-[22px] rounded-bl-md px-4 py-2.5 text-[15px] leading-6 whitespace-pre-wrap glass-soft
+      ${tone === "error" ? "text-terra border border-terra/30" : "text-ink"}">${esc(text)}</div>`);
 
   const statusLine = (text, icon = "") => add(el(`
-    <div class="bubble-in pl-9 text-xs text-fog flex items-center gap-1.5">${icon}<span>${esc(text)}</span></div>`));
+    <div class="bubble-in pl-11 text-[12px] text-inksoft flex items-center gap-1.5">${icon}<span>${esc(text)}</span></div>`));
 
-  const timeLabel = (iso) => add(el(`<div class="text-center text-[11px] text-fog py-1 uppercase tracking-[.14em]">${time(iso)}</div>`));
+  const timeLabel = (iso) => add(el(`<div class="text-center text-[10px] text-fog py-1.5 uppercase tracking-[.28em]">${time(iso)}</div>`));
 
   let typingEl = null;
-  const showTyping = () => {
-    if (typingEl) return;
-    typingEl = agentWrap(`<div class="rounded-[20px] rounded-bl-md bg-smoke px-4 py-3 typing"><i></i><i></i><i></i></div>`);
-  };
+  const showTyping = () => { if (typingEl) return; typingEl = agentWrap(`<div class="rounded-[22px] rounded-bl-md glass-soft px-4 py-3.5 typing"><i></i><i></i><i></i></div>`); };
   const hideTyping = () => { typingEl?.remove(); typingEl = null; };
   const keepTypingLast = () => { if (typingEl) { messages.appendChild(typingEl); scrollDown(); } };
 
   const imgTag = (p, cls) => `<img src="${esc(p.imageUrl)}" alt="${esc(p.title)}" loading="lazy" referrerpolicy="no-referrer" class="${cls}"
-      onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'${cls} flex items-center justify-center bg-ash text-fog font-anton text-2xl',textContent:'${esc((p.brand || "G").slice(0, 1))}'}))" />`;
+      onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'${cls} flex items-center justify-center bg-cream text-gold font-serif text-2xl',textContent:'${esc((p.brand || "M").slice(0, 1))}'}))" />`;
 
   const searchBubble = (products) => agentWrap(`
-    <div class="max-w-[88%] overflow-x-auto no-scrollbar">
-      <div class="flex gap-2">
+    <div class="max-w-[90%] overflow-x-auto no-scrollbar">
+      <div class="flex gap-2.5">
         ${products.map((p) => `
-          <a href="${esc(p.url)}" target="_blank" rel="noopener" class="w-[118px] shrink-0 bg-coal border border-ash hover:border-hot overflow-hidden transition-colors cursor-pointer">
+          <a href="${esc(p.url)}" target="_blank" rel="noopener" class="w-[122px] shrink-0 rounded-2xl glass-soft overflow-hidden hover:-translate-y-0.5 transition-transform cursor-pointer">
             ${imgTag(p, "w-full aspect-[4/5] object-cover")}
-            <div class="p-2">
+            <div class="p-2.5">
               <div class="text-[10px] uppercase tracking-wider text-fog truncate">${esc(p.brand)}</div>
-              <div class="text-xs leading-4 line-clamp-2 h-8 text-chalk">${esc(p.title)}</div>
-              <div class="text-xs font-bold mt-1">${KRW(p.priceKRW)}</div>
+              <div class="text-[12px] leading-4 line-clamp-2 h-8 text-ink mt-0.5">${esc(p.title)}</div>
+              <div class="font-serif text-[15px] text-ink mt-1">${KRW(p.priceKRW)}</div>
             </div>
           </a>`).join("")}
       </div>
     </div>`);
 
   const recommendBubble = (p, reason) => agentWrap(`
-    <div class="w-[300px] max-w-[85%] bg-coal border border-ash overflow-hidden">
+    <div class="w-[300px] max-w-[86%] rounded-3xl glass-soft overflow-hidden shadow-sm">
       <div class="relative">
-        ${imgTag(p, "w-full aspect-[4/4.4] object-cover")}
-        <span class="absolute top-3 left-3 font-anton uppercase tracking-[.14em] text-[12px] bg-hot text-ink px-2.5 py-1">RUBY'S PICK</span>
+        ${imgTag(p, "w-full aspect-[4/4.3] object-cover")}
+        <span class="absolute top-3 left-3 text-[10px] uppercase tracking-[.28em] bg-cream/90 text-golddeep px-2.5 py-1 rounded-full backdrop-blur">Maison Pick</span>
       </div>
       <div class="p-4">
-        <div class="text-[10px] uppercase tracking-[.16em] text-fog">${esc(p.brand)} · ${esc(p.source)}</div>
-        <div class="text-[15px] font-semibold leading-5 mt-1 text-chalk">${esc(p.title)}</div>
+        <div class="text-[10px] uppercase tracking-[.2em] text-fog">${esc(p.brand)} · ${esc(p.source)}</div>
+        <div class="text-[15px] leading-5 mt-1 text-ink">${esc(p.title)}</div>
         <div class="flex items-baseline gap-2 mt-2">
-          <span class="font-anton text-[28px] leading-none tracking-wide">${KRW(p.priceKRW)}</span>
-          <span class="text-xs text-fog">${USDC(p)} USDC</span>
+          <span class="font-serif text-[30px] leading-none text-ink">${KRW(p.priceKRW)}</span>
+          <span class="text-[11px] text-fog">${USDC(p)} USDC</span>
         </div>
-        <p class="text-[14px] leading-6 text-chalk/85 mt-3 border-l-2 border-hot pl-3">${esc(reason)}</p>
-        <div class="mt-3 flex items-center justify-between">
-          <span class="inline-flex items-center gap-1.5 text-xs font-bold text-hot uppercase tracking-wider">${I.bag} IN THE BAG</span>
-          <a href="${esc(p.url)}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-xs text-fog hover:text-chalk transition-colors">원본 보기 ${I.ext}</a>
+        <p class="text-[13.5px] leading-6 text-inksoft mt-3 border-l-2 border-gold pl-3 italic">${esc(reason)}</p>
+        <div class="mt-3.5 flex items-center justify-between">
+          <span class="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-golddeep">${I.bag} 백에 담김</span>
+          <a href="${esc(p.url)}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-[11px] text-fog hover:text-ink transition-colors">원본 보기 ${I.ext}</a>
         </div>
       </div>
     </div>`);
 
   const decisionCard = (ok, reason, tx, amount) => agentWrap(`
-    <div class="w-[320px] max-w-[85%] bg-coal border-2 ${ok ? "border-ok" : "border-bad"} overflow-hidden">
-      <div class="px-4 pt-4 pb-3.5 flex items-start gap-3">
-        <div class="w-9 h-9 flex items-center justify-center shrink-0 ${ok ? "bg-ok text-ink" : "bg-bad text-chalk"}">${ok ? I.check : I.x}</div>
+    <div class="w-[320px] max-w-[86%] rounded-3xl glass-soft overflow-hidden" style="border:1px solid ${ok ? "rgba(111,138,99,.5)" : "rgba(176,87,76,.5)"}">
+      <div class="px-4 py-4 flex items-start gap-3">
+        <div class="w-9 h-9 rounded-full grid place-items-center shrink-0 text-white" style="background:${ok ? "#6f8a63" : "#b0574c"}">${ok ? I.check : I.x}</div>
         <div class="min-w-0">
-          <div class="font-anton uppercase tracking-[.1em] text-[20px] leading-none ${ok ? "text-ok" : "text-bad"}">${ok ? "APPROVED" : "DENIED"}</div>
-          <div class="text-sm text-chalk mt-1.5">${ok ? "Verifier 통과. 네 한도 안이라 바로 정산됨." : `Verifier가 막음 — ${ko(reason)}`}</div>
-          ${amount ? `<div class="text-xs text-fog mt-1.5">${(Number(amount) / 1e6).toFixed(2)} USDC · ${KRW(Number(amount) / 10)}</div>` : ""}
-          ${!ok && reason ? `<div class="text-[11px] font-mono text-fog mt-1 truncate">${esc(reason)}</div>` : ""}
-          ${tx ? `<div class="text-[11px] font-mono text-fog mt-1 truncate">tx ${esc(tx)}</div>` : ""}
+          <div class="font-serif text-[24px] leading-none" style="color:${ok ? "#5c7551" : "#9c4c43"}">${ok ? "Approved" : "Declined"}</div>
+          <div class="text-[13.5px] text-ink mt-1.5 leading-5">${ok ? "Verifier 통과 · 위임 한도 안이라 바로 정산했어요." : `Verifier가 막았어요 — ${ko(reason)}`}</div>
+          ${amount ? `<div class="text-[11px] text-fog mt-1.5">${(Number(amount) / 1e6).toFixed(2)} USDC · ${KRW(Number(amount) / 10)}</div>` : ""}
+          ${!ok && reason ? `<div class="text-[10.5px] font-mono text-fog mt-1 truncate">${esc(reason)}</div>` : ""}
+          ${tx ? `<div class="text-[10.5px] font-mono text-fog mt-1 truncate">tx ${esc(tx)}</div>` : ""}
         </div>
       </div>
     </div>`);
 
-  // ── bag rendering ───────────────────────────────────────────────────────
+  // ── bag rendering ─────────────────────────────────────────────────────────
   const bagItems = $("#bag-items");
-  // [x% from left, bottom% from stage bottom] — filled left→right, bottom→top
   const SLOTS = [
-    [30, 9], [50, 8], [70, 9],
-    [34, 27], [50, 26], [66, 27],
-    [30, 45], [50, 44], [70, 45],
-    [42, 60], [58, 60],
+    [30, 10], [50, 8], [70, 10],
+    [35, 30], [50, 28], [65, 30],
+    [31, 50], [50, 48], [69, 50],
+    [42, 66], [58, 66],
   ];
   const slotOf = (i) => SLOTS[Math.min(i, SLOTS.length - 1)];
 
   function renderBagItem(entry, i) {
     const p = entry.product;
     const [x, y] = slotOf(i);
-    const rot = ((i * 37) % 13) - 6;
+    const rot = ((i * 37) % 11) - 5;
     const node = el(`
-      <div class="bag-item absolute" style="left:${x}%; bottom:${y}%; --r:${rot}deg; --z:${10 + i}; transform: translate(-50%, 0) rotate(${rot}deg);" data-id="${esc(p.id)}" tabindex="0" aria-label="${esc(p.title)}">
-        <div class="relative w-[90px] h-[106px] overflow-hidden bg-chalk border-[3px] border-ink cursor-pointer shadow-[6px_6px_0_#0B0B0D]">
+      <div class="bag-item absolute" style="left:${x}%; bottom:${y}%; --r:${rot}deg; z-index:${10 + i}; transform: translate(-50%, 0) rotate(${rot}deg);" data-id="${esc(p.id)}" tabindex="0" aria-label="${esc(p.title)}">
+        <div class="tile relative w-[92px] h-[110px] rounded-xl overflow-hidden bg-cream border border-white/70 cursor-pointer">
           ${imgTag(p, "w-full h-full object-cover")}
           <div class="badge absolute inset-0 pointer-events-none"></div>
         </div>
-        <div class="tip absolute left-1/2 bottom-[calc(100%+12px)] w-[240px] bg-chalk text-ink border-[3px] border-ink shadow-[6px_6px_0_#0B0B0D] p-3 z-50">
+        <div class="tip absolute left-1/2 bottom-[calc(100%+12px)] w-[236px] rounded-2xl glass p-3 z-50">
           <div class="flex gap-3">
-            ${imgTag(p, "w-14 h-16 object-cover shrink-0 border border-ink")}
+            ${imgTag(p, "w-14 h-16 object-cover shrink-0 rounded-lg")}
             <div class="min-w-0">
-              <div class="text-[10px] uppercase tracking-wider text-ink/60 truncate">${esc(p.brand)} · ${esc(p.source)}</div>
-              <div class="text-xs leading-4 line-clamp-2 font-semibold">${esc(p.title)}</div>
-              <div class="font-anton text-lg leading-none mt-1.5">${KRW(p.priceKRW)} <span class="font-sans text-[11px] font-normal text-ink/60">${USDC(p)} USDC</span></div>
+              <div class="text-[10px] uppercase tracking-wider text-fog truncate">${esc(p.brand)} · ${esc(p.source)}</div>
+              <div class="text-[12px] leading-4 line-clamp-2 text-ink">${esc(p.title)}</div>
+              <div class="font-serif text-lg leading-none mt-1.5 text-ink">${KRW(p.priceKRW)} <span class="font-sans text-[10px] text-fog">${USDC(p)} USDC</span></div>
             </div>
           </div>
-          <div class="tip-status text-xs font-bold mt-2 hidden"></div>
-          <a href="${esc(p.url)}" target="_blank" rel="noopener" class="mt-2.5 flex items-center justify-center gap-1.5 h-10 bg-ink text-chalk text-xs font-bold uppercase tracking-[.14em] hover:bg-coal transition-colors cursor-pointer">
+          <div class="tip-status text-[11px] mt-2 hidden"></div>
+          <a href="${esc(p.url)}" target="_blank" rel="noopener" class="mt-2.5 flex items-center justify-center gap-1.5 h-9 rounded-lg bg-ink text-cream text-[11px] uppercase tracking-[.14em] hover:bg-golddeep transition-colors cursor-pointer">
             원본 상세 보기 ${I.ext}
           </a>
         </div>
@@ -357,17 +371,18 @@
     const tip = entry.node.querySelector(".tip-status");
     tile.classList.remove("ring-pay");
     box.innerHTML = "";
-    tip.className = "tip-status text-xs font-bold mt-2 hidden";
+    tip.className = "tip-status text-[11px] mt-2 hidden";
+    const stamp = (label, color) => `<div class="stamp absolute inset-x-0 top-[40%] mx-auto w-fit font-serif text-[15px] px-2.5 py-0.5 rounded-md" style="border:1.5px solid ${color}; color:${color}; background:rgba(42,33,27,.55); backdrop-filter:blur(2px)">${label}</div>`;
     if (entry.status === "paying") {
       tile.classList.add("ring-pay");
       box.innerHTML = `<div class="absolute inset-0 shine"></div>`;
-      tip.className = "tip-status text-xs font-bold mt-2 text-hotdeep"; tip.textContent = "결제 서명 중 · Verifier 검사 중";
+      tip.className = "tip-status text-[11px] mt-2 text-golddeep"; tip.textContent = "결제 서명 중 · Verifier 검사 중";
     } else if (entry.status === "paid") {
-      box.innerHTML = `<div class="stamp absolute inset-x-0 top-[38%] mx-auto w-fit font-anton uppercase tracking-[.12em] text-[13px] px-2 py-0.5 border-2 border-ok text-ok bg-ink/80">PAID</div>`;
-      tip.className = "tip-status text-xs font-bold mt-2 text-[#0E8A5F]"; tip.textContent = "APPROVED · 정산 완료";
+      box.innerHTML = stamp("Paid", "#8fbf86");
+      tip.className = "tip-status text-[11px] mt-2 text-sage"; tip.textContent = "Approved · 정산 완료";
     } else if (entry.status === "denied") {
-      box.innerHTML = `<div class="stamp absolute inset-x-0 top-[38%] mx-auto w-fit font-anton uppercase tracking-[.12em] text-[13px] px-2 py-0.5 border-2 border-bad text-bad bg-ink/80">DENIED</div>`;
-      tip.className = "tip-status text-xs font-bold mt-2 text-bad"; tip.textContent = "DENIED · " + ko(entry.reason);
+      box.innerHTML = stamp("Declined", "#e08a80");
+      tip.className = "tip-status text-[11px] mt-2 text-terra"; tip.textContent = "Declined · " + ko(entry.reason);
     }
   }
 
@@ -378,7 +393,7 @@
     entry = { product, status: "idle" };
     state.bag.push(entry);
     renderBagItem(entry, state.bag.length - 1);
-    const bag = $("#bag");
+    const bag = $("#pane-bag");
     bag.classList.remove("bag-bump"); void bag.offsetWidth; bag.classList.add("bag-bump");
     updateBagSummary();
     return entry;
@@ -390,15 +405,16 @@
     const krw = pending.reduce((s, e) => s + Number(e.product.priceKRW), 0);
     const usdc = pending.reduce((s, e) => s + Number(USDC(e.product)), 0);
     $("#bag-empty").classList.toggle("hidden", n > 0);
-    $("#bag-count").innerHTML = `<b class="font-anton">${n}</b><span class="text-[16px] tracking-[.2em] ml-1 align-top">ITEMS</span>`;
+    $("#bag-stage-bg").classList.toggle("hidden", n === 0);
+    $("#bag-count").innerHTML = n ? `${n}<span class="text-sm tracking-[.2em] text-inksoft ml-1 align-top uppercase">items</span>` : "";
     $("#bag-count-tab").textContent = n;
     $("#total-krw").textContent = KRW(krw);
     $("#total-usdc").textContent = usdc.toFixed(2) + " USDC · Base Sepolia";
     const payable = pending.filter((e) => e.status !== "paying").length;
     $("#btn-pay").disabled = state.busy || payable === 0;
     $("#btn-pay-label").textContent = state.busy && state.mode === "pay"
-      ? "루비가 결제하는 중…"
-      : payable > 0 ? `루비한테 결제 시키기 · ${payable}개` : n > 0 ? "다 샀음" : "루비한테 결제 시키기";
+      ? "컨시어지가 결제하는 중…"
+      : payable > 0 ? `컨시어지에게 결제 맡기기 · ${payable}개` : n > 0 ? "결제 완료" : "컨시어지에게 결제 맡기기";
   }
 
   function setItemStatus(productId, status, extra = {}) {
@@ -409,7 +425,7 @@
     updateBagSummary();
   }
 
-  // ── API (docs/07-brief-storefront.md) ───────────────────────────────────
+  // ── API (docs/07-brief-storefront.md) — logic unchanged ───────────────────
   const api = async (path, opts) => {
     const r = await fetch(path, { headers: { "content-type": "application/json" }, ...opts });
     if (!r.ok) throw new Error(`${r.status} ${await r.text()}`);
@@ -426,7 +442,6 @@
     } catch { return undefined; }
   }
 
-  // ── event handling ──────────────────────────────────────────────────────
   async function handleEvent(ev) {
     const d = ev.data ?? {};
     switch (ev.step) {
@@ -467,9 +482,15 @@
         keepTypingLast(); break;
       }
       case "done": hideTyping(); agentBubble(ev.message); break;
-      case "error": hideTyping(); agentBubble(ev.message, "error"); break;
+      case "error": hideTyping(); agentBubble(friendlyError(ev.message), "error"); break;
       default: statusLine(ev.message); keepTypingLast();
     }
+  }
+
+  // turn raw provider errors into a calm one-liner
+  function friendlyError(msg) {
+    if (/quota|rate|429|credit/i.test(msg)) return "잠시 컨시어지가 붐벼요. 조금 뒤 다시 말씀해 주세요.";
+    return "처리 중 문제가 있었어요. 다시 시도해 주세요.";
   }
 
   async function runCommand(text, { display, mode }) {
@@ -483,7 +504,7 @@
     try {
       cmd = await api("/commands", { method: "POST", body: JSON.stringify({ text }) });
     } catch (e) {
-      hideTyping(); agentBubble("루비한테 안 닿았어. 상점 서버 켜져 있는지 봐줘.\n" + e.message, "error");
+      hideTyping(); agentBubble("컨시어지에게 닿지 못했어요. 상점 서버가 켜져 있는지 확인해 주세요.", "error");
       state.busy = false; setComposer(true); updateBagSummary(); return;
     }
     let seen = 0, warned = false;
@@ -494,7 +515,7 @@
           const c = await api(`/commands/${cmd.id}`);
           for (; seen < c.events.length; seen++) await handleEvent(c.events[seen]);
           if (c.status === "queued" && !warned && Date.now() - started > 8000) {
-            warned = true; statusLine("루비가 아직 안 읽었어. 샌드박스 켜져 있는지 확인 중…");
+            warned = true; statusLine("컨시어지가 아직 요청을 받지 않았어요. 샌드박스 연결을 확인 중…");
           }
           if (c.status === "done") {
             hideTyping();
@@ -509,7 +530,7 @@
     state.busy = false; setComposer(true); updateBagSummary();
   }
 
-  // ── composer / chips / pay ──────────────────────────────────────────────
+  // ── composer / chips / pay ────────────────────────────────────────────────
   const input = $("#input");
   const setComposer = (on) => { $("#btn-send").disabled = !on; input.disabled = !on; if (on) input.focus(); };
   const autosize = () => { input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight, 128) + "px"; };
@@ -525,7 +546,7 @@
 
   const chips = $("#chips");
   PROMPTS.forEach((p) => {
-    const c = el(`<button type="button" class="shrink-0 h-8 px-3 rounded-full border border-ash bg-coal text-xs text-chalk/80 hover:border-hot hover:text-chalk transition-colors cursor-pointer whitespace-nowrap">${esc(p)}</button>`);
+    const c = el(`<button type="button" class="shrink-0 h-8 px-3.5 rounded-full glass-soft text-[12px] text-inksoft hover:text-ink transition-colors cursor-pointer whitespace-nowrap">${esc(p)}</button>`);
     c.addEventListener("click", () => { if (!state.busy) runCommand(p + CART_HINT, { display: p, mode: "shop" }); });
     chips.appendChild(c);
   });
@@ -537,40 +558,38 @@
     const ids = targets.map((e) => e.product.id);
     const names = targets.map((e) => e.product.title).join(", ");
     runCommand(`다음 상품 ID를 순서대로 하나씩 구매해줘: ${ids.join(", ")}`, {
-      display: `백에 있는 거 결제해줘 (${targets.length}개)\n${names}`, mode: "pay",
+      display: `백에 담긴 상품을 결제해 주세요 (${targets.length}개)\n${names}`, mode: "pay",
     });
   });
 
   $("#btn-reset").addEventListener("click", () => { if (!state.busy) { messages.innerHTML = ""; welcome(); } });
 
-  // mobile tabs
   document.querySelectorAll(".tab").forEach((t) => t.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach((x) => { x.classList.remove("bg-chalk", "text-ink"); x.classList.add("text-chalk"); });
-    t.classList.add("bg-chalk", "text-ink"); t.classList.remove("text-chalk");
+    document.querySelectorAll(".tab").forEach((x) => { x.classList.remove("text-ink"); x.classList.add("text-inksoft"); });
+    t.classList.add("text-ink"); t.classList.remove("text-inksoft");
     const chat = t.dataset.tab === "chat";
     $("#pane-chat").classList.toggle("hidden", !chat);
     $("#pane-bag").classList.toggle("hidden", chat);
     $("#pane-bag").classList.toggle("flex", !chat);
   }));
 
-  // agent liveness from /state: a command left queued > 10s means nobody is polling
   async function pingAgent() {
     try {
       const s = await api("/state");
       const recent = s.commands.find((c) => c.status !== "queued");
       const stale = s.commands.some((c) => c.status === "queued" && Date.now() - new Date(c.created_at) > 10000);
       const ok = !stale;
-      $("#agent-dot").className = `w-1.5 h-1.5 rounded-full ${ok ? "bg-ok" : "bg-bad"}`;
-      $("#agent-status").textContent = ok ? (recent ? "RUBY ONLINE · SANDBOX" : "STORE OPEN · RUBY IDLE") : "RUBY OFFLINE";
+      $("#agent-dot").className = `w-1.5 h-1.5 rounded-full ${ok ? "bg-sage" : "bg-terra"}`;
+      $("#agent-status").textContent = ok ? (recent ? "Concierge online" : "Store open · concierge idle") : "Concierge offline";
     } catch {
-      $("#agent-dot").className = "w-1.5 h-1.5 rounded-full bg-bad";
-      $("#agent-status").textContent = "STORE UNREACHABLE";
+      $("#agent-dot").className = "w-1.5 h-1.5 rounded-full bg-terra";
+      $("#agent-status").textContent = "Store unreachable";
     }
   }
 
   function welcome() {
     timeLabel();
-    agentBubble("왔네. 오늘 뭐 살 건데?\n예산이랑 어디에 입을 건지만 말해. 내가 골라서 백에 넣어놓을게.");
+    agentBubble("안녕하세요, Maison KYA 컨시어지예요. 오늘은 어떤 아이템을 찾으세요?\n예산과 입으실 자리를 말씀해 주시면 상점에서 골라 백에 담아 드릴게요.");
   }
 
   welcome();
