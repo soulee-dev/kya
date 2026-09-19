@@ -3,6 +3,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { betaZodTool } from "@anthropic-ai/sdk/helpers/beta/zod";
 import { GoogleGenAI, type Content, type FunctionDeclaration } from "@google/genai";
+import OpenAI from "openai";
 import { z } from "zod";
 import { createPublicClient, http, erc20Abi } from "viem";
 import { privateKeyToAccount, generatePrivateKey } from "viem/accounts";
@@ -18,8 +19,8 @@ const MERCHANT_URL = (env("MERCHANT_URL", "http://localhost:5050") as string).re
 const SANDBOX_ID = env("SANDBOX_ID", "local");
 const SHOPPING_LIST = env("SHOPPING_LIST");
 // LLM provider: Claude when ANTHROPIC_API_KEY is set, otherwise Gemini (free AI Studio tier).
-const PROVIDER = env("ANTHROPIC_API_KEY") ? "claude" : env("GEMINI_API_KEY") ? "gemini" : undefined;
-const MODEL = env("LLM_MODEL", PROVIDER === "claude" ? "claude-sonnet-5" : "gemini-3.6-flash") as string;
+const PROVIDER = env("ANTHROPIC_API_KEY") ? "claude" : env("OPENAI_API_KEY") ? "openai" : env("GEMINI_API_KEY") ? "gemini" : undefined;
+const MODEL = env("LLM_MODEL", PROVIDER === "claude" ? "claude-sonnet-5" : PROVIDER === "openai" ? "gpt-5" : "gemini-3.6-flash") as string;
 const RPC = env("BASE_SEPOLIA_RPC", "https://sepolia.base.org") as string;
 const USDC = "0x036CbD53842c5426634e7929541eC2318f3dCF7e" as const;
 const NETWORK = "eip155:84532";
@@ -146,7 +147,7 @@ const SYSTEM = `당신은 여성 고객을 위한 개인 쇼핑 에이전트입�
 - 결제는 KYA Verifier가 위임 한도를 검사합니다. 거절되면(kya:per_tx_limit_exceeded 등) 이유를 고객에게 설명하고, 더 싼 대안이 있으면 한 번만 다시 시도하세요.
 - 상품 ID가 직접 주어지면(예: "A, B, C") 검색 없이 그 순서대로 하나씩 구매하고 거절돼도 다음으로 넘어가세요.
 - 고객이 "장바구니에 담아줘", "결제는 하지 말고"처럼 말하면 recommend까지만 하고 체크아웃과 결제는 하지 마세요. 결제는 고객이 따로 요청합니다.
-- 모든 도구 호출이 끝나면 반드시 고객에게 보내는 2~3문장의 다정한 한국어 요약을 텍스트로 작성하세요("ok" 같은 한 단어 금지). 구매한 상품명, 가격, 승인/거절 이유를 포함하세요.`;
+- 모든 도구 호출이 끝나면 반드시 고객에게 보내는 2~3문장의 다정한 한국어 요약을 자연스러운 문장으로 작성하세요. "상품:", "이유:", "recommend" 같은 라벨·목록·도구 이름은 쓰지 말고, 실제 사람이 고객에게 말하듯 상품명·가격·결과(승인/거절 이유)를 문장에 녹여 쓰세요. 구매한 상품명, 가격, 승인/거절 이유를 포함하세요.`;
 
 
 // ── provider-agnostic tool definition ──────────────────────────────────────
@@ -167,6 +168,36 @@ async function runLLM(system: string, userText: string, tools: Tool[]): Promise<
     });
     const final = await runner.runUntilDone();
     return final.content.filter((b) => b.type === "text").map((b) => (b as { text: string }).text).join("\n");
+  }
+  if (PROVIDER === "openai") {
+    const client = new OpenAI();
+    const oaTools = tools.map((t) => ({
+      type: "function" as const,
+      function: { name: t.name, description: t.description, parameters: z.toJSONSchema(t.inputSchema) as Record<string, unknown> },
+    }));
+    const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
+      { role: "system", content: system },
+      { role: "user", content: userText },
+    ];
+    for (let i = 0; i < 12; i++) {
+      const res = await client.chat.completions.create({ model: MODEL, messages, tools: oaTools, tool_choice: "auto" });
+      const msg = res.choices[0].message;
+      messages.push(msg);
+      const calls = msg.tool_calls ?? [];
+      if (calls.length === 0) return msg.content ?? "";
+      for (const call of calls) {
+        if (call.type !== "function") continue;
+        const t = tools.find((x) => x.name === call.function.name);
+        let out: string;
+        try {
+          out = t ? await t.run(t.inputSchema.parse(JSON.parse(call.function.arguments || "{}"))) : `unknown tool ${call.function.name}`;
+        } catch (e) {
+          out = `error: ${(e as Error).message}`;
+        }
+        messages.push({ role: "tool", tool_call_id: call.id, content: out });
+      }
+    }
+    return "도구 호출 횟수 한도에 도달했어요.";
   }
   if (PROVIDER === "gemini") {
     const ai = new GoogleGenAI({ apiKey: env("GEMINI_API_KEY") });
@@ -201,7 +232,7 @@ async function runLLM(system: string, userText: string, tools: Tool[]): Promise<
     }
     return "도구 호출 횟수 한도에 도달했어요.";
   }
-  throw new Error("No LLM key: set ANTHROPIC_API_KEY or GEMINI_API_KEY");
+  throw new Error("No LLM key: set ANTHROPIC_API_KEY, OPENAI_API_KEY, or GEMINI_API_KEY");
 }
 
 async function shop(text: string, commandId?: string) {
