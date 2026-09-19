@@ -22,7 +22,7 @@ Daytona HackSprint 서울 참가용. 규정은 `00-hackathon.md`, Daytona SDK는
 | D10 | 검사 지점 | x402 facilitator 자리. Verifier가 KYA 검사 후 `https://x402.org/facilitator`로 verify/settle을 프록시 |
 | D11 | 누적 한도 | settle 성공 시점에 Spend Ledger 가산. 저장은 메모리 + JSON 파일 |
 | D12 | 운반 | x402 v2 `extensions.kya`. 402에서 광고, 결제 페이로드에 `info.delegation` 덧붙임 |
-| D13 | 네트워크 | Base Sepolia, 테스트넷 USDC. Agent 지갑에는 발급 시 treasury가 충전 |
+| D13 | 네트워크 | Base Sepolia, 테스트넷 USDC. Agent 지갑 충전은 발표자가 Circle faucet으로 직접(ETH 불필요) |
 | D14 | UCP | B가 최소 형태(discovery, products, checkout-sessions, complete)만. 결제 핸들러 `com.kya.x402` 하나 |
 | D15 | 데모 장면 | A 3 USDC 승인 → B 8 USDC 거절(1회 한도) → C 4 USDC 승인 → C 4 USDC 거절(누적 한도) |
 | D16 | 스택 | TypeScript. A: Next.js(화면 + API 라우트) + `jose` + `viem` + `@daytona/sdk`. B: Hono + `@x402/hono` + `@x402/fetch` + `@x402/evm` + `@anthropic-ai/sdk` |
@@ -40,7 +40,7 @@ Daytona HackSprint 서울 참가용. 규정은 `00-hackathon.md`, Daytona SDK는
    ├─ POST /sandboxes                       Daytona 생성 + B 러너 업로드 + envVars 주입 + 실행
    ├─ POST /agents/register                 { sandboxId, address }
    ├─ GET  /agents/:address/delegation      발급 전 404 / 발급 후 JWT
-   ├─ POST /delegations                     JWT 발급 + treasury → agent USDC 충전
+   ├─ POST /delegations                     JWT 발급 (충전은 사람이 Circle faucet으로)
    ├─ POST /agents/:address/events          Agent 로그
    ├─ Verifier: GET /supported, POST /verify, POST /settle   (KYA 검사 → x402.org 프록시)
    └─ GET  /decisions                       판정 카드용
@@ -71,7 +71,7 @@ Daytona HackSprint 서울 참가용. 규정은 `00-hackathon.md`, Daytona SDK는
 
 - 테스트넷 정산 실패 → `KYA_SETTLE_MODE=mock` (검사는 실제, 정산만 가짜 tx)
 - 샌드박스 안에서 터널 접근 실패 → 러너를 노트북에서 실행하되 화면에는 sandbox id 표시
-- 자금 충전 실패 → 미리 충전한 키를 `AGENT_PRIVATE_KEY`로 주입(D6 하향)
+- Circle faucet 충전 실패 → USDC 20이 든 `.env.treasury` 키를 `AGENT_PRIVATE_KEY`로 주입(D6 하향)
 - LLM 지연 → `max_tokens` 낮게, `effort: "low"`, 시나리오는 `SHOPPING_LIST`로 고정
 
 ## 5. 발표 뼈대 (3분)
