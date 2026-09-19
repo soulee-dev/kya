@@ -7,3 +7,7 @@ dist/
 .DS_Store
 data/
 docs/slides/dist/
+
+# transient tooling
+.playwright-mcp/
+**/__pycache__/
