@@ -2,6 +2,7 @@
 // Boot: keygen → register → poll delegation → wait USDC → shop (SHOPPING_LIST, then chat commands).
 import Anthropic from "@anthropic-ai/sdk";
 import { betaZodTool } from "@anthropic-ai/sdk/helpers/beta/zod";
+import { GoogleGenAI, type Content, type FunctionDeclaration } from "@google/genai";
 import { z } from "zod";
 import { createPublicClient, http, erc20Abi } from "viem";
 import { privateKeyToAccount, generatePrivateKey } from "viem/accounts";
@@ -16,7 +17,9 @@ const KYA_URL = env("KYA_URL")?.replace(/\/$/, "");
 const MERCHANT_URL = (env("MERCHANT_URL", "http://localhost:5050") as string).replace(/\/$/, "");
 const SANDBOX_ID = env("SANDBOX_ID", "local");
 const SHOPPING_LIST = env("SHOPPING_LIST");
-const MODEL = env("ANTHROPIC_MODEL", "claude-sonnet-5") as string;
+// LLM provider: Claude when ANTHROPIC_API_KEY is set, otherwise Gemini (free AI Studio tier).
+const PROVIDER = env("ANTHROPIC_API_KEY") ? "claude" : env("GEMINI_API_KEY") ? "gemini" : undefined;
+const MODEL = env("LLM_MODEL", PROVIDER === "claude" ? "claude-sonnet-5" : "gemini-3.6-flash") as string;
 const RPC = env("BASE_SEPOLIA_RPC", "https://sepolia.base.org") as string;
 const USDC = "0x036CbD53842c5426634e7929541eC2318f3dCF7e" as const;
 const NETWORK = "eip155:84532";
@@ -27,7 +30,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 // ── 1. wallet: key is born here and never leaves the sandbox (D6) ──────────
 const account = privateKeyToAccount((env("AGENT_PRIVATE_KEY") as `0x${string}`) ?? generatePrivateKey());
 const publicClient = createPublicClient({ chain: baseSepolia, transport: http(RPC) });
-log(`agent address ${account.address} sandbox=${SANDBOX_ID}`);
+log(`agent address ${account.address} sandbox=${SANDBOX_ID} llm=${PROVIDER ?? "none"}/${MODEL}`);
 
 let delegation: string | undefined = env("KYA_DELEGATION");
 
@@ -136,14 +139,70 @@ async function completeCheckout(sessionId: string): Promise<{ ok: boolean; reaso
 }
 
 // ── LLM shopping loop ──────────────────────────────────────────────────────
-const anthropic = new Anthropic();
 const SYSTEM = `당신은 여성 고객을 위한 개인 쇼핑 에이전트입니다. 상점의 상품을 검색해 고객 요청(예산, 용도, 취향)에 가장 잘 맞는 하나를 고르고, recommend로 이유를 알린 뒤 체크아웃을 만들고 결제까지 완료합니다.
 규칙:
 - 검색은 1~3개의 짧은 한국어 키워드로, 필요하면 여러 번 하세요 (예: "자켓", "트위드 자켓", "가방").
 - 가격은 priceKRW(원)로 판단하세요. 고객이 예산을 말하면 그 안에서 고르세요.
 - 결제는 KYA Verifier가 위임 한도를 검사합니다. 거절되면(kya:per_tx_limit_exceeded 등) 이유를 고객에게 설명하고, 더 싼 대안이 있으면 한 번만 다시 시도하세요.
 - 상품 ID가 직접 주어지면(예: "A, B, C") 검색 없이 그 순서대로 하나씩 구매하고 거절돼도 다음으로 넘어가세요.
-- 마지막에 고객에게 보내는 2~3문장의 다정한 한국어 요약을 작성하세요. 구매한 상품명, 가격, 승인/거절 이유를 포함하세요.`;
+- 고객이 "장바구니에 담아줘", "결제는 하지 말고"처럼 말하면 recommend까지만 하고 체크아웃과 결제는 하지 마세요. 결제는 고객이 따로 요청합니다.
+- 모든 도구 호출이 끝나면 반드시 고객에게 보내는 2~3문장의 다정한 한국어 요약을 텍스트로 작성하세요("ok" 같은 한 단어 금지). 구매한 상품명, 가격, 승인/거절 이유를 포함하세요.`;
+
+
+// ── provider-agnostic tool definition ──────────────────────────────────────
+type Tool<I = any> = { name: string; description: string; inputSchema: z.ZodType<I>; run: (args: I) => Promise<string> };
+const tool = <I,>(t: Tool<I>) => t;
+
+async function runLLM(system: string, userText: string, tools: Tool[]): Promise<string> {
+  if (PROVIDER === "claude") {
+    const anthropic = new Anthropic();
+    const runner = anthropic.beta.messages.toolRunner({
+      model: MODEL,
+      max_tokens: 1200,
+      output_config: { effort: "low" },
+      system,
+      messages: [{ role: "user", content: userText }],
+      tools: tools.map((t) => betaZodTool({ name: t.name, description: t.description, inputSchema: t.inputSchema, run: t.run })),
+      max_iterations: 12,
+    });
+    const final = await runner.runUntilDone();
+    return final.content.filter((b) => b.type === "text").map((b) => (b as { text: string }).text).join("\n");
+  }
+  if (PROVIDER === "gemini") {
+    const ai = new GoogleGenAI({ apiKey: env("GEMINI_API_KEY") });
+    const functionDeclarations: FunctionDeclaration[] = tools.map((t) => ({
+      name: t.name,
+      description: t.description,
+      parametersJsonSchema: z.toJSONSchema(t.inputSchema),
+    }));
+    const contents: Content[] = [{ role: "user", parts: [{ text: userText }] }];
+    for (let i = 0; i < 12; i++) {
+      const res = await ai.models.generateContent({
+        model: MODEL,
+        contents,
+        config: { systemInstruction: system, tools: [{ functionDeclarations }], temperature: 0.3 },
+      });
+      const calls = res.functionCalls ?? [];
+      const modelParts = res.candidates?.[0]?.content?.parts ?? [];
+      if (calls.length === 0) return res.text ?? "";
+      contents.push({ role: "model", parts: modelParts });
+      const responses = [];
+      for (const call of calls) {
+        const t = tools.find((x) => x.name === call.name);
+        let out: string;
+        try {
+          out = t ? await t.run(t.inputSchema.parse(call.args ?? {})) : `unknown tool ${call.name}`;
+        } catch (e) {
+          out = `error: ${(e as Error).message}`;
+        }
+        responses.push({ functionResponse: { name: call.name!, response: { result: out } } });
+      }
+      contents.push({ role: "user", parts: responses });
+    }
+    return "도구 호출 횟수 한도에 도달했어요.";
+  }
+  throw new Error("No LLM key: set ANTHROPIC_API_KEY or GEMINI_API_KEY");
+}
 
 async function shop(text: string, commandId?: string) {
   const emit = async (step: string, message: string, data?: unknown) => {
@@ -156,10 +215,10 @@ async function shop(text: string, commandId?: string) {
         body: JSON.stringify({ step, message, data }),
       }).catch(() => {});
   };
-  const result = { outcome: "not_found" as "purchased" | "denied" | "not_found" | "error", checkoutId: undefined as string | undefined, productId: undefined as string | undefined };
+  const result = { outcome: "not_found" as "purchased" | "denied" | "recommended" | "not_found" | "error", checkoutId: undefined as string | undefined, productId: undefined as string | undefined };
 
-  const tools = [
-    betaZodTool({
+  const tools: Tool[] = [
+    tool({
       name: "search_products",
       description: "상점 카탈로그에서 키워드로 상품을 검색합니다. 최대 8개 반환.",
       inputSchema: z.object({ query: z.string().describe("짧은 한국어 키워드") }),
@@ -170,18 +229,19 @@ async function shop(text: string, commandId?: string) {
         return JSON.stringify(list.map(({ id, title, brand, priceKRW, category }) => ({ id, title, brand, priceKRW, category })));
       },
     }),
-    betaZodTool({
+    tool({
       name: "recommend",
       description: "고객에게 최종 추천 상품과 이유를 알립니다. 체크아웃 전에 반드시 호출.",
       inputSchema: z.object({ productId: z.string(), reason: z.string().describe("한 문장, 한국어") }),
       run: async ({ productId, reason }) => {
         const p = await mj(await fetch(`${MERCHANT_URL}/products/${productId}`)).catch(() => null);
         result.productId = productId;
+        if (result.outcome === "not_found") result.outcome = "recommended";
         await emit("recommend", reason, { product: p });
         return "ok";
       },
     }),
-    betaZodTool({
+    tool({
       name: "create_checkout",
       description: "상품 하나로 UCP 체크아웃 세션을 만듭니다. sessionId를 반환.",
       inputSchema: z.object({ productId: z.string() }),
@@ -192,7 +252,7 @@ async function shop(text: string, commandId?: string) {
         return JSON.stringify({ sessionId: co.id, totalUSDC: Number(co.total) / 1e6, status: co.status });
       },
     }),
-    betaZodTool({
+    tool({
       name: "complete_checkout",
       description: "체크아웃을 x402 결제로 완료합니다. KYA Verifier가 위임 범위를 검사해 승인/거절합니다.",
       inputSchema: z.object({ sessionId: z.string() }),
@@ -208,17 +268,7 @@ async function shop(text: string, commandId?: string) {
 
   await emit("think", `요청 분석 중: "${text}"`);
   try {
-    const runner = anthropic.beta.messages.toolRunner({
-      model: MODEL,
-      max_tokens: 1200,
-      output_config: { effort: "low" },
-      system: SYSTEM,
-      messages: [{ role: "user", content: text }],
-      tools,
-      max_iterations: 12,
-    });
-    const final = await runner.runUntilDone();
-    const summary = final.content.filter((b) => b.type === "text").map((b) => (b as { text: string }).text).join("\n").trim();
+    const summary = (await runLLM(SYSTEM, text, tools)).trim();
     await emit("done", summary || "완료");
     if (commandId)
       await fetch(`${MERCHANT_URL}/commands/${commandId}/done`, {

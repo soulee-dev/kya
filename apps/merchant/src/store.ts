@@ -42,7 +42,7 @@ export interface Command {
   status: "queued" | "running" | "done";
   created_at: string;
   events: CommandEvent[];
-  result?: { checkoutId?: string; productId?: string; outcome: "purchased" | "denied" | "not_found" | "error"; message: string };
+  result?: { checkoutId?: string; productId?: string; outcome: "purchased" | "denied" | "recommended" | "not_found" | "error"; message: string };
 }
 
 class Store {

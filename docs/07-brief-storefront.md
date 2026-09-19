@@ -30,7 +30,7 @@
 
 거절 코드 → 한글: `kya:per_tx_limit_exceeded` 1회 한도 초과 · `kya:cumulative_limit_exceeded` 누적 한도 초과 · `kya:missing_delegation` 위임 없음 · `kya:invalid_delegation` 위임 만료/위조 · `kya:merchant_not_allowed` 허용되지 않은 상점 · `kya:subject_mismatch` 에이전트 불일치.
 
-`result`: `{ outcome: "purchased"|"denied"|"not_found"|"error", productId?, checkoutId?, message }`.
+`result`: `{ outcome: "purchased"|"denied"|"recommended"|"not_found"|"error", productId?, checkoutId?, message }`.
 
 ## 금액 표기
 `amount`는 USDC atomic(6자리) 문자열. 데모 환산 1 USDC = 100,000원 → `priceKRW = amount/10`. 화면엔 원화 주로, USDC 보조.

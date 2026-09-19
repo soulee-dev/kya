@@ -13,7 +13,8 @@
 ## 선택 env
 | 변수 | 의미 |
 |---|---|
-| `ANTHROPIC_MODEL` | 기본 `claude-sonnet-5` |
+| `GEMINI_API_KEY` | `ANTHROPIC_API_KEY` 없을 때 Gemini(AI Studio 무료 티어) 사용 |
+| `LLM_MODEL` | 기본 `claude-sonnet-5` / `gemini-3.6-flash` |
 | `BASE_SEPOLIA_RPC` | 기본 `https://sepolia.base.org` |
 | `AGENT_PRIVATE_KEY` | 충전 실패 대비(D6 하향). 지정하면 키 생성 생략 |
 | `KYA_DELEGATION` | `KYA_URL` 없이 로컬 실행할 때 직접 주입 |

@@ -1,1 +1,605 @@
-<!doctype html><title>KYA Merchant</title><p>storefront placeholder</p>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Maison KYA — AI 퍼스널 쇼퍼</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink: "#0C0A09", stone1: "#1C1917", stone2: "#44403C", mute: "#57534E",
+          paper: "#FAFAF9", line: "#E7E5E4", gold: "#CA8A04", golddeep: "#A16207",
+          ok: "#15803D", okbg: "#F0FDF4", bad: "#B91C1C", badbg: "#FEF2F2",
+        },
+        fontFamily: {
+          serif: ['"Cormorant Garamond"', "Georgia", "serif"],
+          sans: ['"Pretendard Variable"', "Pretendard", "-apple-system", "system-ui", "sans-serif"],
+        },
+        boxShadow: {
+          glass: "0 1px 0 rgba(255,255,255,.7) inset, 0 20px 50px -20px rgba(28,25,23,.25)",
+          card: "0 1px 2px rgba(28,25,23,.06), 0 12px 32px -16px rgba(28,25,23,.22)",
+          bubble: "0 1px 2px rgba(28,25,23,.05)",
+        },
+      },
+    },
+  };
+</script>
+<style>
+  :root { color-scheme: light; }
+  html, body { height: 100%; }
+  body {
+    background:
+      radial-gradient(1200px 600px at 85% -10%, rgba(202,138,4,.10), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(68,64,60,.10), transparent 60%),
+      #FAFAF9;
+  }
+  .glass { background: rgba(255,255,255,.72); backdrop-filter: blur(18px) saturate(1.2); -webkit-backdrop-filter: blur(18px) saturate(1.2); }
+  .scroll-thin { scrollbar-width: thin; scrollbar-color: rgba(28,25,23,.18) transparent; }
+  .scroll-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+  .scroll-thin::-webkit-scrollbar-thumb { background: rgba(28,25,23,.18); border-radius: 999px; }
+  .no-scrollbar::-webkit-scrollbar { display: none; } .no-scrollbar { scrollbar-width: none; }
+
+  /* ── chat ─────────────────────────────────────────────── */
+  .bubble-in { animation: bubble-in .28s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes bubble-in { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: none; } }
+  .typing i { display: inline-block; width: 6px; height: 6px; border-radius: 999px; background: #A8A29E; margin: 0 1.5px; animation: typing 1.2s infinite ease-in-out; }
+  .typing i:nth-child(2) { animation-delay: .15s; } .typing i:nth-child(3) { animation-delay: .3s; }
+  @keyframes typing { 0%, 60%, 100% { transform: translateY(0); opacity: .5; } 30% { transform: translateY(-4px); opacity: 1; } }
+
+  /* ── bag ───────────────────────────────────────────────── */
+  .bag-item { z-index: var(--z, 10); animation: drop .7s cubic-bezier(.34,1.56,.64,1) both; will-change: transform; }
+  @keyframes drop {
+    0%   { opacity: 0; transform: translate(-50%, -260px) rotate(var(--r, 0deg)) scale(.6); }
+    55%  { opacity: 1; transform: translate(-50%, 10px) rotate(var(--r, 0deg)) scale(1.04); }
+    100% { opacity: 1; transform: translate(-50%, 0) rotate(var(--r, 0deg)) scale(1); }
+  }
+  .bag-bump { animation: bump .5s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes bump { 0% { transform: scale(1); } 35% { transform: scale(1.03) translateY(4px); } 100% { transform: scale(1); } }
+  .tip { opacity: 0; visibility: hidden; transform: translate(-50%, 6px) rotate(calc(-1 * var(--r, 0deg))); transition: opacity .18s ease, transform .18s ease, visibility 0s linear .18s; }
+  .bag-item:hover .tip, .bag-item:focus-within .tip, .tip:hover { opacity: 1; visibility: visible; transform: translate(-50%, 0) rotate(calc(-1 * var(--r, 0deg))); transition-delay: 0s; }
+  .bag-item:hover, .bag-item:focus-within { z-index: 40; }
+  .ring-pay { animation: ring-pay 1.2s ease-in-out infinite; }
+  @keyframes ring-pay { 0%, 100% { box-shadow: 0 0 0 0 rgba(202,138,4,.55); } 50% { box-shadow: 0 0 0 8px rgba(202,138,4,0); } }
+  .shine { background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.55) 50%, transparent 70%); background-size: 200% 100%; animation: shine 2.2s linear infinite; }
+  @keyframes shine { to { background-position: -200% 0; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bubble-in, .bag-item, .bag-bump, .typing i, .ring-pay, .shine { animation: none !important; }
+    .tip { transition: none; }
+  }
+</style>
+</head>
+<body class="font-sans text-ink antialiased overflow-hidden">
+
+<!-- ── top bar ─────────────────────────────────────────────── -->
+<header class="h-14 px-5 md:px-8 flex items-center justify-between border-b border-line/80 glass relative z-30">
+  <div class="flex items-baseline gap-3">
+    <span class="font-serif text-[26px] leading-none tracking-wide">Maison <span class="italic text-golddeep">KYA</span></span>
+    <span class="hidden sm:inline text-[11px] uppercase tracking-[.22em] text-mute">women's edit · personal shopper</span>
+  </div>
+  <div class="flex items-center gap-2 text-xs text-mute">
+    <span id="agent-dot" class="w-2 h-2 rounded-full bg-stone-300"></span>
+    <span id="agent-status">에이전트 연결 확인 중</span>
+  </div>
+</header>
+
+<!-- mobile tabs -->
+<nav class="md:hidden h-11 flex border-b border-line/80 bg-paper text-sm relative z-30" aria-label="화면 전환">
+  <button data-tab="chat" class="tab flex-1 font-medium border-b-2 border-ink cursor-pointer">채팅</button>
+  <button data-tab="bag" class="tab flex-1 text-mute border-b-2 border-transparent cursor-pointer">쇼핑백 <span id="bag-count-tab" class="ml-1 inline-flex min-w-[18px] h-[18px] px-1 items-center justify-center rounded-full bg-ink text-white text-[11px]">0</span></button>
+</nav>
+
+<main class="grid md:grid-cols-2 h-[calc(100dvh-3.5rem-2.75rem)] md:h-[calc(100dvh-3.5rem)]">
+
+  <!-- ── LEFT · chat ────────────────────────────────────────── -->
+  <section id="pane-chat" class="flex flex-col min-h-0 md:border-r border-line/80 bg-white/40">
+    <div class="h-[68px] px-5 flex items-center gap-3 border-b border-line/60">
+      <div class="relative">
+        <div class="w-11 h-11 rounded-full p-[2px] bg-gradient-to-tr from-golddeep via-gold to-stone-300">
+          <div class="w-full h-full rounded-full bg-stone1 flex items-center justify-center text-white font-serif text-lg">K</div>
+        </div>
+        <span class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-ok border-2 border-white"></span>
+      </div>
+      <div class="min-w-0">
+        <div class="font-semibold text-[15px] leading-tight">KYA 퍼스널 쇼퍼</div>
+        <div class="text-xs text-mute leading-tight mt-0.5">위임 범위 안에서만 결제해요 · 활성 상태</div>
+      </div>
+      <button id="btn-reset" class="ml-auto p-2 rounded-full text-mute hover:text-ink hover:bg-stone-100 transition-colors cursor-pointer" aria-label="대화 새로 시작" title="대화 새로 시작">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+      </button>
+    </div>
+
+    <div id="messages" class="flex-1 min-h-0 overflow-y-auto scroll-thin px-4 md:px-6 py-5 space-y-2.5" aria-live="polite"></div>
+
+    <div class="px-4 md:px-6 pb-4 pt-2 border-t border-line/60 bg-white/60">
+      <div id="chips" class="flex gap-2 overflow-x-auto no-scrollbar pb-2.5 -mx-1 px-1"></div>
+      <form id="composer" class="flex items-end gap-2">
+        <label for="input" class="sr-only">메시지</label>
+        <div class="flex-1 flex items-end rounded-[22px] border border-line bg-white focus-within:border-stone-400 transition-colors">
+          <textarea id="input" rows="1" placeholder="메시지 보내기…" class="flex-1 max-h-32 resize-none bg-transparent px-4 py-2.5 text-[15px] leading-6 outline-none placeholder:text-stone-400"></textarea>
+        </div>
+        <button id="btn-send" type="submit" class="w-11 h-11 rounded-full bg-ink text-white flex items-center justify-center hover:bg-stone2 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer" aria-label="보내기">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 14-7-7 14v-7z"/></svg>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ── RIGHT · shopping bag ───────────────────────────────── -->
+  <section id="pane-bag" class="hidden md:flex flex-col min-h-0">
+    <div class="h-[68px] px-6 flex items-center justify-between border-b border-line/60">
+      <div>
+        <div class="font-serif text-2xl leading-none">Shopping Bag</div>
+        <div class="text-xs text-mute mt-1">에이전트가 고른 상품이 여기에 담겨요</div>
+      </div>
+      <span id="bag-count" class="text-sm text-mute"><b class="text-ink font-semibold">0</b> items</span>
+    </div>
+
+    <!-- stage -->
+    <div class="flex-1 min-h-0 relative flex items-center justify-center px-6 py-4">
+      <div id="bag" class="relative w-full max-w-[440px] aspect-[4/3.4]">
+        <!-- translucent bag/cart -->
+        <svg class="absolute inset-0 w-full h-full" viewBox="0 0 440 374" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity=".35"/></linearGradient>
+            <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#CA8A04" stop-opacity=".55"/><stop offset="1" stop-color="#1C1917" stop-opacity=".35"/></linearGradient>
+          </defs>
+          <!-- shadow -->
+          <ellipse cx="220" cy="352" rx="150" ry="10" fill="#1C1917" fill-opacity=".08"/>
+          <!-- handle -->
+          <path d="M170 118 C170 62 270 62 270 118" stroke="url(#g2)" stroke-width="7" stroke-linecap="round"/>
+          <!-- body (back) -->
+          <path d="M96 118 H344 L322 334 C321 342 314 348 306 348 H134 C126 348 119 342 118 334 Z" fill="#F5F5F4" fill-opacity=".9"/>
+        </svg>
+        <!-- items layer: z 10..19, hovered item lifts to z-40 above the frosted front -->
+        <div id="bag-items" class="absolute inset-0"></div>
+        <!-- frosted front face over the items -->
+        <svg class="absolute inset-0 w-full h-full pointer-events-none" style="z-index:20" viewBox="0 0 440 374" fill="none" aria-hidden="true">
+          <path d="M96 118 H344 L322 334 C321 342 314 348 306 348 H134 C126 348 119 342 118 334 Z" fill="url(#g1)" fill-opacity=".55" stroke="url(#g2)" stroke-width="1.6"/>
+          <path d="M112 132 L122 320" stroke="#fff" stroke-opacity=".9" stroke-width="3" stroke-linecap="round"/>
+          <text x="220" y="330" text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-size="15" fill="#1C1917" fill-opacity=".5">Maison KYA</text>
+        </svg>
+        <!-- empty state -->
+        <div id="bag-empty" class="absolute inset-x-0 top-[47%] text-center text-sm text-mute px-10">
+          아직 비어 있어요.<br/><span class="text-xs">채팅으로 원하는 아이템을 말해 보세요.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- totals + pay -->
+    <div class="px-6 pb-6 pt-3 border-t border-line/60 bg-white/60">
+      <div class="flex items-baseline justify-between mb-1">
+        <span class="text-sm text-mute">합계</span>
+        <span class="font-sans font-semibold text-2xl tracking-tight"><span id="total-krw">₩0</span></span>
+      </div>
+      <div class="flex items-center justify-between text-xs text-mute mb-4">
+        <span>결제는 에이전트 지갑 · USDC (Base Sepolia)</span>
+        <span id="total-usdc">0.00 USDC</span>
+      </div>
+      <button id="btn-pay" disabled class="w-full h-12 rounded-full bg-ink text-white font-medium text-[15px] flex items-center justify-center gap-2 hover:bg-stone2 disabled:bg-stone-200 disabled:text-stone-500 disabled:cursor-not-allowed transition-colors cursor-pointer relative overflow-hidden">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        <span id="btn-pay-label">에이전트에게 결제 시키기</span>
+      </button>
+      <p class="text-[11px] text-mute text-center mt-2">결제 직전 KYA Verifier가 위임 범위(1회·누적 한도)를 검사해요.</p>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  // ── data ────────────────────────────────────────────────────────────────
+  const REASON_KO = {
+    "kya:per_tx_limit_exceeded": "1회 한도 초과",
+    "kya:cumulative_limit_exceeded": "누적 한도 초과",
+    "kya:missing_delegation": "위임 없음",
+    "kya:invalid_delegation": "위임 만료/위조",
+    "kya:merchant_not_allowed": "허용되지 않은 상점",
+    "kya:subject_mismatch": "에이전트 불일치",
+  };
+  const ko = (r) => REASON_KO[r] ?? (r || "알 수 없는 이유");
+  const KRW = (n) => "₩" + Math.round(n).toLocaleString("ko-KR");
+  const USDC = (p) => p.priceUSDC ?? (Number(p.amount) / 1e6).toFixed(2);
+  const PROMPTS = [
+    "가을에 입을 10만원대 트위드 자켓 하나 골라줘",
+    "80만원짜리 실크 원피스 사줘",
+    "데일리로 할 진주 귀걸이 추천해줘",
+    "출근용 가방 30만원 이하로",
+  ];
+  const CART_HINT = "\n(결제는 하지 말고 장바구니에 담아만 줘. 결제는 내가 따로 시킬게.)";
+
+  const state = {
+    bag: [],               // { product, status: 'idle'|'paying'|'paid'|'denied', reason?, tx?, checkoutId? }
+    busy: false,
+    checkoutToProduct: {}, // checkoutId -> productId
+    currentCheckout: null,
+  };
+
+  const $ = (s) => document.querySelector(s);
+  const el = (html) => { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const time = (iso) => new Date(iso ?? Date.now()).toLocaleTimeString("ko-KR", { hour: "numeric", minute: "2-digit" });
+
+  // ── chat rendering ──────────────────────────────────────────────────────
+  const messages = $("#messages");
+  const scrollDown = () => { messages.scrollTop = messages.scrollHeight; };
+  const add = (node) => { messages.appendChild(node); scrollDown(); return node; };
+
+  const userBubble = (text) => add(el(`
+    <div class="bubble-in flex justify-end">
+      <div class="max-w-[78%] rounded-[20px] rounded-br-md bg-ink text-white px-4 py-2.5 text-[15px] leading-6 whitespace-pre-wrap">${esc(text)}</div>
+    </div>`));
+
+  const agentWrap = (inner, extra = "") => add(el(`
+    <div class="bubble-in flex items-end gap-2 ${extra}">
+      <div class="w-7 h-7 shrink-0 rounded-full bg-stone1 text-white font-serif text-sm flex items-center justify-center">K</div>
+      ${inner}
+    </div>`));
+
+  const agentBubble = (text, tone = "") => agentWrap(`
+    <div class="max-w-[78%] rounded-[20px] rounded-bl-md px-4 py-2.5 text-[15px] leading-6 whitespace-pre-wrap shadow-bubble
+      ${tone === "error" ? "bg-badbg text-bad" : "bg-white text-ink"}">${esc(text)}</div>`);
+
+  const statusLine = (text, icon = "") => add(el(`
+    <div class="bubble-in pl-9 text-xs text-mute flex items-center gap-1.5">${icon}<span>${esc(text)}</span></div>`));
+
+  const timeLabel = (iso) => add(el(`<div class="text-center text-[11px] text-stone-400 py-1">${time(iso)}</div>`));
+
+  let typingEl = null;
+  const showTyping = () => {
+    if (typingEl) return;
+    typingEl = agentWrap(`<div class="rounded-[20px] rounded-bl-md bg-white shadow-bubble px-4 py-3 typing"><i></i><i></i><i></i></div>`);
+  };
+  const hideTyping = () => { typingEl?.remove(); typingEl = null; };
+  const keepTypingLast = () => { if (typingEl) { messages.appendChild(typingEl); scrollDown(); } };
+
+  const imgTag = (p, cls) => `<img src="${esc(p.imageUrl)}" alt="${esc(p.title)}" loading="lazy" referrerpolicy="no-referrer" class="${cls}"
+      onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'${cls} flex items-center justify-center bg-stone-100 text-stone-400 font-serif text-2xl',textContent:'${esc((p.brand || "K").slice(0, 1))}'}))" />`;
+
+  const searchBubble = (products) => agentWrap(`
+    <div class="max-w-[85%] overflow-x-auto no-scrollbar">
+      <div class="flex gap-2">
+        ${products.map((p) => `
+          <a href="${esc(p.url)}" target="_blank" rel="noopener" class="w-[118px] shrink-0 rounded-2xl bg-white shadow-bubble border border-line/70 overflow-hidden hover:border-stone-400 transition-colors cursor-pointer">
+            ${imgTag(p, "w-full aspect-[4/5] object-cover")}
+            <div class="p-2">
+              <div class="text-[10px] uppercase tracking-wider text-mute truncate">${esc(p.brand)}</div>
+              <div class="text-xs leading-4 line-clamp-2 h-8">${esc(p.title)}</div>
+              <div class="text-xs font-semibold mt-1">${KRW(p.priceKRW)}</div>
+            </div>
+          </a>`).join("")}
+      </div>
+    </div>`);
+
+  const recommendBubble = (p, reason) => agentWrap(`
+    <div class="w-[300px] max-w-[85%] rounded-[22px] rounded-bl-md bg-white shadow-card border border-line/70 overflow-hidden">
+      <div class="relative">
+        ${imgTag(p, "w-full aspect-[4/4.6] object-cover")}
+        <span class="absolute top-3 left-3 text-[10px] uppercase tracking-[.18em] bg-white/85 backdrop-blur px-2 py-1 rounded-full">Agent's pick</span>
+      </div>
+      <div class="p-4">
+        <div class="text-[11px] uppercase tracking-wider text-mute">${esc(p.brand)} · ${esc(p.source)}</div>
+        <div class="text-[15px] font-medium leading-5 mt-0.5">${esc(p.title)}</div>
+        <div class="flex items-baseline gap-2 mt-1.5">
+          <span class="font-semibold text-xl tracking-tight">${KRW(p.priceKRW)}</span>
+          <span class="text-xs text-mute">${USDC(p)} USDC</span>
+        </div>
+        <p class="text-[14px] leading-6 text-stone2 mt-2.5">${esc(reason)}</p>
+        <div class="mt-3 flex items-center justify-between">
+          <span class="inline-flex items-center gap-1.5 text-xs text-golddeep">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            쇼핑백에 담았어요
+          </span>
+          <a href="${esc(p.url)}" target="_blank" rel="noopener" class="text-xs text-mute hover:text-ink underline underline-offset-4 transition-colors">원본 보기</a>
+        </div>
+      </div>
+    </div>`);
+
+  const decisionCard = (ok, reason, tx, amount) => agentWrap(`
+    <div class="max-w-[82%] w-[320px] rounded-[22px] rounded-bl-md border overflow-hidden shadow-bubble ${ok ? "bg-okbg border-green-200" : "bg-badbg border-red-200"}">
+      <div class="px-4 pt-4 pb-3 flex items-start gap-3">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${ok ? "bg-ok text-white" : "bg-bad text-white"}">
+          ${ok
+            ? `<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>`
+            : `<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>`}
+        </div>
+        <div class="min-w-0">
+          <div class="font-semibold ${ok ? "text-ok" : "text-bad"}">${ok ? "결제 승인" : "결제 거절"}</div>
+          <div class="text-sm text-stone2 mt-0.5">${ok ? "KYA Verifier가 위임 범위 안이라고 판정했어요." : ko(reason)}</div>
+          ${amount ? `<div class="text-xs text-mute mt-1">${(Number(amount) / 1e6).toFixed(2)} USDC · ${KRW(Number(amount) / 10)}</div>` : ""}
+          ${!ok && reason ? `<div class="text-[11px] font-mono text-mute mt-1 truncate">${esc(reason)}</div>` : ""}
+          ${tx ? `<div class="text-[11px] font-mono text-mute mt-1 truncate">tx ${esc(tx)}</div>` : ""}
+        </div>
+      </div>
+    </div>`);
+
+  const shieldIcon = `<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`;
+  const searchIcon = `<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>`;
+  const bagIcon = `<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`;
+
+  // ── bag rendering ───────────────────────────────────────────────────────
+  const bagItems = $("#bag-items");
+  // slots inside the bag body (x%, y%), filled left→right, bottom→top
+  // [x% from left, bottom% from stage bottom]
+  const SLOTS = [
+    [30, 10], [50, 9], [70, 10],
+    [34, 27], [50, 26], [66, 27],
+    [30, 44], [50, 43], [70, 44],
+    [42, 56], [58, 56],
+  ];
+  const slotOf = (i) => SLOTS[Math.min(i, SLOTS.length - 1)];
+
+  function renderBagItem(entry, i) {
+    const p = entry.product;
+    const [x, y] = slotOf(i);
+    const rot = ((i * 37) % 13) - 6; // deterministic slight tilt
+    const node = el(`
+      <div class="bag-item absolute" style="left:${x}%; bottom:${y}%; --r:${rot}deg; transform: translate(-50%, 0) rotate(${rot}deg); --z:${10 + i};" data-id="${esc(p.id)}" tabindex="0" aria-label="${esc(p.title)}">
+        <div class="relative w-[88px] h-[104px] rounded-xl overflow-hidden bg-white shadow-card ring-1 ring-black/5 cursor-pointer">
+          ${imgTag(p, "w-full h-full object-cover")}
+          <div class="badge absolute inset-0 pointer-events-none"></div>
+        </div>
+        <div class="tip absolute left-1/2 bottom-[calc(100%+10px)] w-[230px] rounded-2xl bg-white shadow-card border border-line/70 p-3 z-50">
+          <div class="flex gap-3">
+            ${imgTag(p, "w-14 h-16 rounded-lg object-cover shrink-0")}
+            <div class="min-w-0">
+              <div class="text-[10px] uppercase tracking-wider text-mute truncate">${esc(p.brand)} · ${esc(p.source)}</div>
+              <div class="text-xs leading-4 line-clamp-2">${esc(p.title)}</div>
+              <div class="text-sm font-semibold mt-1">${KRW(p.priceKRW)} <span class="text-[11px] font-normal text-mute">${USDC(p)} USDC</span></div>
+            </div>
+          </div>
+          <div class="tip-status text-xs mt-2 hidden"></div>
+          <a href="${esc(p.url)}" target="_blank" rel="noopener" class="mt-2.5 flex items-center justify-center gap-1.5 h-9 rounded-full bg-ink text-white text-xs font-medium hover:bg-stone2 transition-colors cursor-pointer">
+            원본 상세 보기
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
+          </a>
+          <span class="absolute left-1/2 -bottom-1.5 -translate-x-1/2 w-3 h-3 rotate-45 bg-white border-r border-b border-line/70"></span>
+        </div>
+      </div>`);
+    entry.node = node;
+    bagItems.appendChild(node);
+    paintStatus(entry);
+  }
+
+  function paintStatus(entry) {
+    const box = entry.node.querySelector(".badge");
+    const tile = box.parentElement;
+    const tip = entry.node.querySelector(".tip-status");
+    tile.classList.remove("ring-pay");
+    box.innerHTML = "";
+    tip.className = "tip-status text-xs mt-2 hidden";
+    if (entry.status === "paying") {
+      tile.classList.add("ring-pay");
+      box.innerHTML = `<div class="absolute inset-0 shine"></div>`;
+      tip.className = "tip-status text-xs mt-2 text-golddeep"; tip.textContent = "결제 서명 · Verifier 검사 중…";
+    } else if (entry.status === "paid") {
+      box.innerHTML = `<div class="absolute inset-0 bg-ok/15"></div><div class="absolute right-1.5 bottom-1.5 w-6 h-6 rounded-full bg-ok text-white flex items-center justify-center"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></div>`;
+      tip.className = "tip-status text-xs mt-2 text-ok"; tip.textContent = "결제 승인 · 정산 완료";
+    } else if (entry.status === "denied") {
+      box.innerHTML = `<div class="absolute inset-0 bg-bad/15"></div><div class="absolute right-1.5 bottom-1.5 w-6 h-6 rounded-full bg-bad text-white flex items-center justify-center"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></div>`;
+      tip.className = "tip-status text-xs mt-2 text-bad"; tip.textContent = "결제 거절 · " + ko(entry.reason);
+    }
+  }
+
+  function addToBag(product) {
+    if (!product?.id) return;
+    let entry = state.bag.find((e) => e.product.id === product.id);
+    if (entry) return entry;
+    entry = { product, status: "idle" };
+    state.bag.push(entry);
+    renderBagItem(entry, state.bag.length - 1);
+    const bag = $("#bag");
+    bag.classList.remove("bag-bump"); void bag.offsetWidth; bag.classList.add("bag-bump");
+    updateBagSummary();
+    return entry;
+  }
+
+  function updateBagSummary() {
+    const n = state.bag.length;
+    const pending = state.bag.filter((e) => e.status !== "paid");
+    const krw = pending.reduce((s, e) => s + Number(e.product.priceKRW), 0);
+    const usdc = pending.reduce((s, e) => s + Number(USDC(e.product)), 0);
+    $("#bag-empty").classList.toggle("hidden", n > 0);
+    $("#bag-count").innerHTML = `<b class="text-ink font-semibold">${n}</b> items`;
+    $("#bag-count-tab").textContent = n;
+    $("#total-krw").textContent = KRW(krw);
+    $("#total-usdc").textContent = usdc.toFixed(2) + " USDC";
+    const payable = pending.filter((e) => e.status !== "paying").length;
+    const btn = $("#btn-pay");
+    btn.disabled = state.busy || payable === 0;
+    $("#btn-pay-label").textContent = state.busy && state.mode === "pay"
+      ? "에이전트가 결제 중…"
+      : payable > 0 ? `에이전트에게 결제 시키기 · ${payable}개` : n > 0 ? "모두 결제됐어요" : "에이전트에게 결제 시키기";
+  }
+
+  function setItemStatus(productId, status, extra = {}) {
+    const entry = state.bag.find((e) => e.product.id === productId);
+    if (!entry) return;
+    Object.assign(entry, { status }, extra);
+    paintStatus(entry);
+    updateBagSummary();
+  }
+
+  // ── API ─────────────────────────────────────────────────────────────────
+  const api = async (path, opts) => {
+    const r = await fetch(path, { headers: { "content-type": "application/json" }, ...opts });
+    if (!r.ok) throw new Error(`${r.status} ${await r.text()}`);
+    return r.json();
+  };
+
+  async function productOfCheckout(checkoutId) {
+    if (state.checkoutToProduct[checkoutId]) return state.checkoutToProduct[checkoutId];
+    try {
+      const co = await api(`/checkout-sessions/${checkoutId}`);
+      const id = co.line_items?.[0]?.item?.id;
+      if (id) state.checkoutToProduct[checkoutId] = id;
+      return id;
+    } catch { return undefined; }
+  }
+
+  // ── event handling ──────────────────────────────────────────────────────
+  async function handleEvent(ev) {
+    const d = ev.data ?? {};
+    switch (ev.step) {
+      case "start": showTyping(); break;
+      case "think": showTyping(); break;
+      case "search":
+        if (Array.isArray(d.products) && d.products.length) searchBubble(d.products);
+        else statusLine(ev.message, searchIcon);
+        keepTypingLast(); break;
+      case "recommend":
+        if (d.product) { recommendBubble(d.product, ev.message); addToBag(d.product); }
+        else agentBubble(ev.message);
+        keepTypingLast(); break;
+      case "checkout": {
+        state.currentCheckout = d.checkoutId;
+        const pid = d.checkoutId ? await productOfCheckout(d.checkoutId) : undefined;
+        if (pid) {
+          const entry = state.bag.find((e) => e.product.id === pid);
+          if (!entry) { try { addToBag(await api(`/products/${pid}`)); } catch {} }
+          setItemStatus(pid, "paying", { checkoutId: d.checkoutId });
+        }
+        statusLine(ev.message, bagIcon); keepTypingLast(); break;
+      }
+      case "verify":
+      case "settle": {
+        const pid = d.checkoutId ? await productOfCheckout(d.checkoutId) : state.checkoutToProduct[state.currentCheckout];
+        statusLine(`Verifier ${ev.step} · ${d.decision === "approved" ? "승인" : "거절"} · ${d.reason ?? ""}`, shieldIcon);
+        if (pid && d.decision === "denied") setItemStatus(pid, "denied", { reason: d.reason });
+        if (pid && d.decision === "approved" && ev.step === "settle") setItemStatus(pid, "paid", { tx: d.txHash });
+        keepTypingLast(); break;
+      }
+      case "pay": {
+        if (typeof d.ok === "boolean") {
+          const pid = state.checkoutToProduct[state.currentCheckout];
+          const entry = state.bag.find((e) => e.product.id === pid);
+          decisionCard(d.ok, d.reason, d.tx, entry ? Number(USDC(entry.product)) * 1e6 : undefined);
+          if (pid) setItemStatus(pid, d.ok ? "paid" : "denied", { reason: d.reason, tx: d.tx });
+        } else statusLine(ev.message, shieldIcon);
+        keepTypingLast(); break;
+      }
+      case "done": hideTyping(); agentBubble(ev.message); break;
+      case "error": hideTyping(); agentBubble(ev.message, "error"); break;
+      default: statusLine(ev.message); keepTypingLast();
+    }
+  }
+
+  async function runCommand(text, { display, mode }) {
+    if (state.busy) return;
+    state.busy = true; state.mode = mode;
+    setComposer(false); updateBagSummary();
+    timeLabel();
+    userBubble(display ?? text);
+    showTyping();
+    let cmd;
+    try {
+      cmd = await api("/commands", { method: "POST", body: JSON.stringify({ text }) });
+    } catch (e) {
+      hideTyping(); agentBubble("에이전트에게 전달하지 못했어요. 서버 상태를 확인해 주세요.\n" + e.message, "error");
+      state.busy = false; setComposer(true); updateBagSummary(); return;
+    }
+    let seen = 0;
+    const started = Date.now();
+    let warned = false;
+    await new Promise((resolve) => {
+      const tick = async () => {
+        try {
+          const c = await api(`/commands/${cmd.id}`);
+          for (; seen < c.events.length; seen++) await handleEvent(c.events[seen]);
+          if (c.status === "queued" && !warned && Date.now() - started > 8000) {
+            warned = true; statusLine("에이전트가 아직 명령을 받지 않았어요. 샌드박스가 켜져 있는지 확인 중…");
+          }
+          if (c.status === "done") {
+            hideTyping();
+            // items still marked paying after done → unknown outcome; unlock them
+            state.bag.filter((e) => e.status === "paying").forEach((e) => { e.status = "idle"; paintStatus(e); });
+            return resolve();
+          }
+        } catch {}
+        setTimeout(tick, 1000);
+      };
+      tick();
+    });
+    state.busy = false; setComposer(true); updateBagSummary();
+  }
+
+  // ── composer / chips / pay ──────────────────────────────────────────────
+  const input = $("#input");
+  const setComposer = (on) => { $("#btn-send").disabled = !on; input.disabled = !on; if (on) input.focus(); };
+  const autosize = () => { input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight, 128) + "px"; };
+  input.addEventListener("input", autosize);
+  input.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); $("#composer").requestSubmit(); } });
+  $("#composer").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = ""; autosize();
+    runCommand(text + CART_HINT, { display: text, mode: "shop" });
+  });
+
+  const chips = $("#chips");
+  PROMPTS.forEach((p) => {
+    const c = el(`<button type="button" class="shrink-0 h-8 px-3 rounded-full border border-line bg-white text-xs text-stone2 hover:border-stone-400 hover:text-ink transition-colors cursor-pointer whitespace-nowrap">${esc(p)}</button>`);
+    c.addEventListener("click", () => { if (!state.busy) runCommand(p + CART_HINT, { display: p, mode: "shop" }); });
+    chips.appendChild(c);
+  });
+
+  $("#btn-pay").addEventListener("click", () => {
+    const targets = state.bag.filter((e) => e.status === "idle" || e.status === "denied");
+    if (!targets.length || state.busy) return;
+    targets.forEach((e) => { e.status = "paying"; paintStatus(e); });
+    const ids = targets.map((e) => e.product.id);
+    const names = targets.map((e) => e.product.title).join(", ");
+    runCommand(`다음 상품 ID를 순서대로 하나씩 구매해줘: ${ids.join(", ")}`, {
+      display: `쇼핑백 결제해줘 (${targets.length}개)\n${names}`, mode: "pay",
+    });
+  });
+
+  $("#btn-reset").addEventListener("click", () => {
+    if (state.busy) return;
+    messages.innerHTML = ""; welcome();
+  });
+
+  // mobile tabs
+  document.querySelectorAll(".tab").forEach((t) => t.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach((x) => { x.classList.remove("border-ink", "font-medium"); x.classList.add("border-transparent", "text-mute"); });
+    t.classList.add("border-ink", "font-medium"); t.classList.remove("border-transparent", "text-mute");
+    const chat = t.dataset.tab === "chat";
+    $("#pane-chat").classList.toggle("hidden", !chat);
+    $("#pane-bag").classList.toggle("hidden", chat);
+    $("#pane-bag").classList.toggle("flex", !chat);
+  }));
+
+  // agent liveness: /state shows whether commands get claimed (running/done) recently
+  async function pingAgent() {
+    try {
+      const s = await api("/state");
+      const recent = s.commands.find((c) => c.status !== "queued");
+      const stale = s.commands.some((c) => c.status === "queued" && Date.now() - new Date(c.created_at) > 10000);
+      const ok = !stale;
+      $("#agent-dot").className = `w-2 h-2 rounded-full ${ok ? "bg-ok" : "bg-gold"}`;
+      $("#agent-status").textContent = ok ? (recent ? "에이전트 온라인 · 샌드박스" : "상점 연결됨 · 에이전트 대기") : "에이전트 응답 없음";
+    } catch {
+      $("#agent-dot").className = "w-2 h-2 rounded-full bg-bad";
+      $("#agent-status").textContent = "상점 서버 연결 실패";
+    }
+  }
+
+  function welcome() {
+    timeLabel();
+    agentBubble("안녕하세요, KYA 퍼스널 쇼퍼예요. 어떤 아이템을 찾으세요?\n예산과 용도를 말해 주시면 상점에서 골라 쇼핑백에 담아 드릴게요.");
+  }
+
+  welcome();
+  updateBagSummary();
+  pingAgent(); setInterval(pingAgent, 5000);
+  autosize();
+})();
+</script>
+</body>
+</html>
