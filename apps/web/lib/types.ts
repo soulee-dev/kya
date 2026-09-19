@@ -1,19 +1,13 @@
-export const NETWORK = "eip155:84532";
-export const USDC = "0x036CbD53842c5426634e7929541eC2318f3dCF7e";
-export type Scope = {
-  network: string;
-  asset: string;
-  perTxLimit: string;
-  cumulativeLimit: string;
-  merchants: string[];
-};
-export type Principal = {
-  principalId: string;
-  did: string;
-  entityType: "person" | "business";
-  name: string;
-  verifiedAt: string;
-};
+// 브라우저에서도 읽는 파일이다. Node 전용 모듈이 섞이지 않도록 core의 types 서브패스만 쓴다.
+import type {
+  Decision as CoreDecision,
+  Principal,
+  Scope,
+} from "@kya/core/types";
+import { NETWORK, USDC_ASSET } from "@kya/core/types";
+export { NETWORK };
+export const USDC = USDC_ASSET;
+export type { Principal, Scope };
 export type AppState = {
   principal: Principal | null;
   sandbox: { sandboxId: string; simulated: boolean } | null;
@@ -28,16 +22,8 @@ export type AppState = {
   } | null;
   events: { at: string; step: string; message: string }[];
 };
-export type Decision = {
-  at: string;
-  jti: string;
-  payer: string;
-  payTo: string;
-  amount: string;
-  decision: "approved" | "denied";
-  reason?: string;
-  txHash?: string;
-};
+/** Verifier `GET /decisions` 항목. 형식은 core의 판정 카드를 따른다. */
+export type Decision = CoreDecision;
 export type PublicState = Omit<AppState, "delegation"> & {
   delegation: Omit<NonNullable<AppState["delegation"]>, "token"> | null;
   demo: boolean;

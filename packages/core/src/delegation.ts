@@ -1,13 +1,13 @@
 import { SignJWT, decodeProtectedHeader, importJWK, jwtVerify, type JWK } from "jose";
 import { randomUUID } from "node:crypto";
-import { agentDid, buildDidDocument, didWebToDocumentUrl, pickPublicJwk, type DidDocument } from "./did.js";
-import type { PrincipalSigner } from "./keys.js";
+import { agentDid, buildDidDocument, didWebToDocumentUrl, pickPublicJwk, type DidDocument } from "./did";
+import type { PrincipalSigner } from "./keys";
 import {
   DEFAULT_DELEGATION_TTL_SECONDS,
   type DelegationClaims,
   type Principal,
   type Scope,
-} from "./types.js";
+} from "./types";
 
 export interface IssueDelegationInput {
   signer: PrincipalSigner;

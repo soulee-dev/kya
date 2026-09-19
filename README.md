@@ -1,43 +1,47 @@
-# KYA (Know Your Agent) — core
+# KYA (Know Your Agent)
 
 용어는 `CONTEXT.md`, 계획은 `docs/02-plan.md`, 팀원과의 접점 계약은 `docs/04-contract.md`.
-이 저장소에는 KYA 플랫폼의 **core**(발급 + 검증)만 있다. 화면(Next.js)은 별도.
 
 ```
-packages/core      @kya/core   도메인 로직. 프레임워크 없음.
-apps/verifier      @kya/verifier  Hono :4000  x402 facilitator 자리의 Verifier (접점 3)
-apps/platform      @kya/platform  Hono :4001  발급 API + did.json (접점 1, 4)
-scripts/e2e.sh     둘을 함께 띄워 데모 4장면 통과
+packages/core      @kya/core      도메인 로직. 프레임워크 없음. 발급(접점 1, 4)과 검증(접점 3) 모두 여기에 있다
+apps/web           @kya/web       Next.js :3000  발급 콘솔 + 발급 API + did.json. core를 호출하는 얇은 HTTP·화면 계층
+apps/verifier      @kya/verifier  Hono :4000     x402 facilitator 자리의 Verifier (접점 3)
+scripts/e2e.sh     웹과 Verifier를 함께 띄워 데모 4장면 통과
+docs/slides        Slidev 발표 자료
 ```
 
 ## 실행
 
 ```sh
-pnpm install
-pnpm test          # core 단위 테스트 (6단계 검사, JWT, 원장, 발급)
+pnpm install       # 루트에서 한 번. 워크스페이스 전체(core, web, verifier, slides)를 설치한다
+pnpm test          # core 단위 테스트 (6단계 검사, JWT, 원장)
+pnpm typecheck     # 모든 패키지
 pnpm scenario      # Verifier 단독: mock 모드 + DID_DOC_OVERRIDE 로 4장면 curl
-pnpm fake-agent    # 플랫폼 단독: 러너 없이 register → 발급 → did.json 검증
-pnpm e2e           # 플랫폼 발급 JWT를 Verifier가 실제 did.json 조회로 검사
+pnpm e2e           # 웹이 발급한 JWT를 Verifier가 실제 did.json 조회로 검사 (둘 다 자동으로 띄운다)
 
-cp .env.example .env
+cp .env.example .env                       # verifier 용
+cp apps/web/.env.example apps/web/.env.local
 pnpm verifier      # :4000
-pnpm platform      # :4001
+pnpm web           # :3000
+pnpm fake-agent    # 실행 중인 웹에 러너 없이 register → 발급 → did.json 검증 (ISSUE_DELEGATION=1)
 ```
 
 ## `@kya/core` 모듈
 
 | 파일 | 역할 |
 |---|---|
-| `types.ts` | Principal, Scope, DelegationClaims, Decision, x402 v2 타입, 상수(네트워크·USDC·충전액) |
+| `types.ts` | Principal, Scope, DelegationClaims, Decision, x402 v2 타입, 상수(네트워크·USDC·충전액). `@kya/core/types`로 브라우저에서도 import 가능 |
 | `did.ts` | `did:web` ↔ `/.well-known/did.json`, `did:pkh` ↔ 주소, DID 문서 생성 |
 | `keys.ts` | Principal 서명 키(EdDSA/Ed25519) 생성·파일 보관 |
 | `delegation.ts` | `issueDelegation` / `verifyDelegation`, did:web 리졸버(60초 캐시) |
 | `check.ts` | `checkPayment`: 접점 3의 6단계 검사, 거절 코드 그대로 |
 | `ledger.ts` | Spend Ledger (메모리 + JSON 파일) |
 | `verifier.ts` | `createVerifier`: supported / verify / settle / decisions / ledgerFor. `mode: live|mock` |
-| `platform.ts` | `createPlatform`: 신원 확인 스텁 → 샌드박스 → register → 발급(+충전) → events → state |
-| `funding.ts` | Treasury: viem으로 Base Sepolia USDC 전송 |
+| `funding.ts` | Treasury: viem으로 Base Sepolia USDC 전송 (`send` / `confirm` / `fund`) |
 | `sandbox.ts` | Daytona 샌드박스 생성, 러너 업로드, 환경 변수 주입, 백그라운드 실행 |
+| `store.ts` | `JsonState`: 메모리 상태 + JSON 파일 즉시 기록 |
+
+core는 TS 소스를 그대로 내보낸다. Next.js에서는 `transpilePackages: ["@kya/core"]`가 필요하고, 상대 import에 확장자를 붙이지 않는다(Turbopack이 `.js` → `.ts`를 해석하지 않는다).
 
 ## Verifier 라우트 (`apps/verifier`, 접점 3)
 
@@ -51,26 +55,22 @@ pnpm platform      # :4001
 
 환경 변수: `UPSTREAM_FACILITATOR`, `KYA_SETTLE_MODE=live|mock`, `PORT`, `DATA_DIR`, `DID_DOC_OVERRIDE`(파일 경로 또는 JSON).
 
-## 플랫폼 라우트 (`apps/platform`, 접점 1·4)
+## 발급 라우트 (`apps/web`, 접점 1·4)
 
-같은 라우터를 `/api/*` 와 `/*` 두 곳에 붙였다. 러너는 계약대로 `/agents/...` 를, 화면은 `/api/...` 를 쓰면 된다.
+`/api/*` 를 기본으로 두고, 러너 계약 경로(`/principals`, `/sandboxes`, `/delegations`, `/agents/*`)는 `next.config.ts`의 rewrite로 같은 핸들러에 연결한다. 자세한 동작과 환경 변수는 `apps/web/README.md`.
 
 | 라우트 | 동작 |
 |---|---|
-| `GET /.well-known/did.json` | Principal 공개키 (host 단위 키 하나, `data/principal-key.json`) |
-| `POST /principals` | `{ entityType, name, registrationNumber? }` → 확인됨 + `did:web:<host>:principals:<id>` |
-| `POST /sandboxes` | Daytona 생성 + 러너 업로드 + 실행. 키가 없으면 `local-…` id |
-| `POST /agents/register` | `{ sandboxId, address }` |
-| `GET /agents/:address/delegation` | 발급 전 404, 후 `{ delegation, jti, exp }` |
-| `POST /delegations` | `{ principalId, address, scope:{perTxLimit, cumulativeLimit, merchants[]} }` → JWT + treasury 충전 |
-| `POST /agents/:address/events` | `{ step, message }` |
-| `GET /state` | 화면 폴링용 한 방 응답 |
-
-### Next.js에 붙일 때
-
-`createPlatformApp(platform)`은 Hono 앱이므로 `app/api/[[...route]]/route.ts`에서 `hono/vercel`의 `handle()`로 마운트할 수 있다.
-`/.well-known/did.json`은 `/api` 밖이므로 `next.config`의 `rewrites`로 `/api/.well-known/did.json`에 연결하거나 별도 route로 둔다.
-`@kya/core`는 TS 소스를 그대로 내보내므로 `transpilePackages: ["@kya/core"]`가 필요하다.
+| `GET /.well-known/did.json` | Principal 공개키 (host 단위 키 하나, `apps/web/data/principal-key.json`) |
+| `GET /principals/:id/did.json` | 같은 키를 Principal DID 문서로 |
+| `POST /api/principals` | `{ entityType, name, registrationNumber? }` → 확인됨(스텁) + `did:web:<host>:principals:<id>` |
+| `POST /api/sandboxes` | Daytona 생성 + 러너 업로드 + 실행. `WEB_DEMO_MODE=true` 면 `local-…` id |
+| `POST /api/agents/register` | `{ sandboxId, address }` |
+| `GET /api/agents/:address/delegation` | 발급 전 404, 후 `{ delegation }` |
+| `POST /api/delegations` | `{ principalId, address, scope }` → JWT + treasury 충전(영수증 확인까지) |
+| `POST /api/agents/:address/events` | `{ step, message }` |
+| `GET /api/state` | 화면 폴링용 한 방 응답 |
+| `GET /api/verifier/decisions`, `/api/verifier/ledger/:jti` | `VERIFIER_URL`로 프록시 |
 
 ## 판정 카드의 형태
 

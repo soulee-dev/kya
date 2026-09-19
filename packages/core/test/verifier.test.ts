@@ -2,8 +2,8 @@ import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { createVerifier, SpendLedger, staticDidResolver } from "../src/index.js";
-import { fixture, paymentRequest } from "./fixtures.js";
+import { createVerifier, SpendLedger, staticDidResolver } from "../src/index";
+import { fixture, paymentRequest } from "./fixtures";
 
 describe("verifier service (mock mode)", () => {
   it("runs the 4-scene demo, records decisions and persists the ledger", async () => {

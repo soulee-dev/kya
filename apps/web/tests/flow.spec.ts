@@ -97,7 +97,7 @@ test("identity → sandbox → delegation, contract validation, and responsive l
   const { payload } = await jwtVerify(delegation, key, {
     algorithms: ["EdDSA"],
     issuer: state.principal.did,
-    subject: `did:pkh:eip155:84532:${address}`,
+    subject: `did:pkh:eip155:84532:${address.toLowerCase()}`,
   });
   expect(payload.exp! - payload.iat!).toBe(3600);
   expect(payload.vc).toMatchObject({
