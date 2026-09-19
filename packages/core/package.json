@@ -1,0 +1,21 @@
+{
+  "name": "@kya/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@daytona/sdk": "^0.214.0",
+    "jose": "^6.2.12",
+    "viem": "^2.56.8"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.7"
+  }
+}
