@@ -13,13 +13,14 @@ import { decodePaymentRequiredHeader, decodePaymentResponseHeader } from "@x402/
 import { ExactEvmScheme } from "@x402/evm/exact/client";
 import { toClientEvmSigner } from "@x402/evm";
 
-const env = (k: string, d?: string) => process.env[k] ?? d;
+// Empty values count as unset: `set -a; . .env` exports AGENT_PRIVATE_KEY="" etc.
+const env = (k: string, d?: string) => process.env[k] || d;
 const KYA_URL = env("KYA_URL")?.replace(/\/$/, "");
 const MERCHANT_URL = (env("MERCHANT_URL", "http://localhost:5050") as string).replace(/\/$/, "");
 const SANDBOX_ID = env("SANDBOX_ID", "local");
 const SHOPPING_LIST = env("SHOPPING_LIST");
 // LLM provider: Claude when ANTHROPIC_API_KEY is set, otherwise Gemini (free AI Studio tier).
-const PROVIDER = env("ANTHROPIC_API_KEY") ? "claude" : env("OPENAI_API_KEY") ? "openai" : env("GEMINI_API_KEY") ? "gemini" : undefined;
+const PROVIDER = (env("LLM_PROVIDER") as "claude" | "openai" | "gemini" | undefined) ?? (env("ANTHROPIC_API_KEY") ? "claude" : env("OPENAI_API_KEY") ? "openai" : env("GEMINI_API_KEY") ? "gemini" : undefined);
 const MODEL = env("LLM_MODEL", PROVIDER === "claude" ? "claude-sonnet-5" : PROVIDER === "openai" ? "gpt-5" : "gemini-3.6-flash") as string;
 const RPC = env("BASE_SEPOLIA_RPC", "https://sepolia.base.org") as string;
 const USDC = "0x036CbD53842c5426634e7929541eC2318f3dCF7e" as const;
@@ -50,11 +51,17 @@ async function bootWithKya() {
     log("KYA_URL not set → local mode (no register/poll)");
     return;
   }
-  await fetch(`${KYA_URL}/agents/register`, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ sandboxId: SANDBOX_ID, address: account.address }),
-  });
+  // The tunnel may reset the first connections right after boot; never die on register.
+  for (let attempt = 1; ; attempt++) {
+    const r = await fetch(`${KYA_URL}/agents/register`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ sandboxId: SANDBOX_ID, address: account.address }),
+    }).catch((e: Error) => ({ ok: false, status: 0, text: async () => String((e as { cause?: { code?: string } }).cause?.code ?? e.message) }));
+    if (r.ok) break;
+    log(`register failed (${r.status}) ${await r.text().catch(() => "")} — retry ${attempt}`);
+    await sleep(Math.min(2000 * attempt, 10000));
+  }
   log("registered; waiting for delegation…");
   while (!delegation) {
     const r = await fetch(`${KYA_URL}/agents/${account.address}/delegation`).catch(() => undefined);

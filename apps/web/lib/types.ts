@@ -18,7 +18,7 @@ export type AppState = {
     exp: number;
     token: string;
     fundingTx?: string;
-    fundingStatus: "pending" | "confirmed" | "simulated";
+    fundingStatus: "pending" | "confirmed" | "simulated" | "manual";
   } | null;
   events: { at: string; step: string; message: string }[];
 };

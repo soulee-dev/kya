@@ -196,7 +196,10 @@ export async function handle(request: Request, segments: string[]) {
           );
         if (delegation.fundingStatus === "pending") {
           if (demoMode()) delegation.fundingStatus = "simulated";
-          else {
+          else if (!process.env.TREASURY_PRIVATE_KEY) {
+            // docs/04-contract.md 접점 4: 충전은 발표자가 Circle faucet 으로 한다. 러너가 잔액을 기다린다.
+            delegation.fundingStatus = "manual";
+          } else {
             if (!delegation.fundingTx) {
               delegation.fundingTx = await sendFunding(input.address);
               await writeState(state);
@@ -209,9 +212,11 @@ export async function handle(request: Request, segments: string[]) {
           event(
             state,
             "treasury",
-            demoMode()
+            delegation.fundingStatus === "simulated"
               ? "데모 모드 · 실제 USDC 충전 없음"
-              : "Agent 지갑에 USDC 충전 완료",
+              : delegation.fundingStatus === "manual"
+                ? "Circle faucet(Base Sepolia)에서 Agent 주소로 USDC를 충전해 주세요"
+                : "Agent 지갑에 20 USDC 충전 완료",
           );
           await writeState(state);
         }
